@@ -15,62 +15,86 @@ export default function AdminUploadPage() {
   const [message, setMessage] = useState({ type: '', text: '' })
   const [fetchingMovie, setFetchingMovie] = useState(false)
 
-  // Fetch movie details from TMDb
+  // Fetch movie details from TMDb via our API route
   const fetchMovieFromTMDb = async () => {
-    if (!tmdbId) {
-      setMessage({ type: 'error', text: 'Please enter a TMDb ID' })
-      return
-    }
-
-    setFetchingMovie(true)
-    setMessage({ type: '', text: '' })
-
-    try {
-      const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY
-      const response = await fetch(
-        `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${apiKey}`
-      )
-
-      if (!response.ok) {
-        throw new Error('Movie not found')
-      }
-
-      const data = await response.json()
-      
-      setMovieTitle(data.title)
-      setMovieYear(new Date(data.release_date).getFullYear())
-      setMessage({ type: 'success', text: `Found: ${data.title} (${new Date(data.release_date).getFullYear()})` })
-    } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to fetch movie from TMDb. Check the ID.' })
-    } finally {
-      setFetchingMovie(false)
-    }
+  if (!tmdbId) {
+    setMessage({ type: 'error', text: 'Please enter a TMDb ID' })
+    return
   }
+
+  setFetchingMovie(true)
+  setMessage({ type: '', text: '' })
+
+  try {
+    // NEW: Use query parameter route
+    const response = await fetch(`/api/tmdb-fetch?id=${tmdbId}`)
+
+    console.log('API Response status:', response.status)
+
+    if (!response.ok) {
+      const errorData = await response.json()
+      console.error('API Error:', errorData)
+      throw new Error(errorData.error || 'Movie not found')
+    }
+
+    const data = await response.json()
+    console.log('Movie data:', data)
+    
+    setMovieTitle(data.title)
+    setMovieYear(data.year.toString())
+    setMessage({ 
+      type: 'success', 
+      text: `✅ Found: ${data.title} (${data.year})` 
+    })
+  } catch (error) {
+    console.error('Fetch error:', error)
+    setMessage({ 
+      type: 'error', 
+      text: `❌ Failed to fetch movie: ${error.message}` 
+    })
+  } finally {
+    setFetchingMovie(false)
+  }
+}
 
   // Handle file selection
   const handleFileChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        setMessage({ type: 'error', text: 'Please select an image file' })
-        return
-      }
+    const file = e.target.files?.[0]
+    
+    if (!file) {
+      setImageFile(null)
+      setImagePreview(null)
+      return
+    }
 
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setMessage({ type: 'error', text: 'Image must be less than 5MB' })
-        return
-      }
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setMessage({ type: 'error', text: 'Please select an image file' })
+      setImageFile(null)
+      setImagePreview(null)
+      return
+    }
 
-      setImageFile(file)
-      
-      // Create preview
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setImagePreview(reader.result)
-      }
-      reader.readAsDataURL(file)
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage({ type: 'error', text: 'Image must be less than 5MB' })
+      setImageFile(null)
+      setImagePreview(null)
+      return
+    }
+
+    // File is valid
+    setImageFile(file)
+    
+    // Create preview
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setImagePreview(reader.result)
+    }
+    reader.readAsDataURL(file)
+    
+    // Clear any previous error messages
+    if (message.type === 'error') {
       setMessage({ type: '', text: '' })
     }
   }
@@ -79,61 +103,90 @@ export default function AdminUploadPage() {
   const handleUpload = async (e) => {
     e.preventDefault()
 
-    // Validation
-    if (!tmdbId || !movieTitle || !movieYear || !imageFile) {
-      setMessage({ type: 'error', text: 'Please fill all fields and select an image' })
+    // Detailed validation with specific error messages
+    if (!tmdbId || !tmdbId.trim()) {
+      setMessage({ type: 'error', text: '❌ Please enter a TMDb ID' })
+      return
+    }
+
+    if (!movieTitle || !movieTitle.trim()) {
+      setMessage({ type: 'error', text: '❌ Please enter a movie title' })
+      return
+    }
+
+    if (!movieYear || !movieYear.trim()) {
+      setMessage({ type: 'error', text: '❌ Please enter a release year' })
+      return
+    }
+
+    if (!imageFile) {
+      setMessage({ type: 'error', text: '❌ Please select an image file' })
       return
     }
 
     setLoading(true)
-    setMessage({ type: '', text: '' })
+    setMessage({ type: 'info', text: '⏳ Uploading...' })
 
     try {
       // Step 1: Check if movie exists in database
-      let { data: existingMovie, error: fetchError } = await supabase
+      const { data: existingMovie } = await supabase
         .from('movies')
         .select('id')
         .eq('tmdb_id', parseInt(tmdbId))
-        .single()
+        .maybeSingle()
 
       let movieId
 
       if (existingMovie) {
-        // Movie already exists
         movieId = existingMovie.id
+        console.log('Movie already exists:', movieId)
       } else {
         // Step 2: Create movie entry
         const { data: newMovie, error: movieError } = await supabase
           .from('movies')
           .insert({
             tmdb_id: parseInt(tmdbId),
-            title: movieTitle,
+            title: movieTitle.trim(),
             year: parseInt(movieYear),
             genre: genre,
-            poster_path: null // We can add this later if needed
+            poster_path: null
           })
           .select()
           .single()
 
-        if (movieError) throw movieError
+        if (movieError) {
+          console.error('Movie insert error:', movieError)
+          throw new Error(`Database error: ${movieError.message}`)
+        }
+
         movieId = newMovie.id
+        console.log('Created new movie:', movieId)
       }
 
       // Step 3: Upload image to Supabase Storage
       const fileExt = imageFile.name.split('.').pop()
       const fileName = `${tmdbId}_${Date.now()}.${fileExt}`
-      const filePath = fileName
+
+      console.log('Uploading image:', fileName)
 
       const { error: uploadError } = await supabase.storage
         .from('movie-frames')
-        .upload(filePath, imageFile)
+        .upload(fileName, imageFile, {
+          cacheControl: '3600',
+          upsert: false
+        })
 
-      if (uploadError) throw uploadError
+      if (uploadError) {
+        console.error('Storage upload error:', uploadError)
+        throw new Error(`Upload failed: ${uploadError.message}`)
+      }
 
       // Step 4: Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('movie-frames')
-        .getPublicUrl(filePath)
+        .getPublicUrl(fileName)
+
+      console.log('Public URL:', publicUrl)
 
       // Step 5: Create frame entry
       const { error: frameError } = await supabase
@@ -143,7 +196,10 @@ export default function AdminUploadPage() {
           image_url: publicUrl
         })
 
-      if (frameError) throw frameError
+      if (frameError) {
+        console.error('Frame insert error:', frameError)
+        throw new Error(`Frame save failed: ${frameError.message}`)
+      }
 
       // Success!
       setMessage({ 
@@ -152,17 +208,24 @@ export default function AdminUploadPage() {
       })
 
       // Reset form
-      setTmdbId('')
-      setMovieTitle('')
-      setMovieYear('')
-      setImageFile(null)
-      setImagePreview(null)
+      setTimeout(() => {
+        setTmdbId('')
+        setMovieTitle('')
+        setMovieYear('')
+        setGenre('hollywood')
+        setImageFile(null)
+        setImagePreview(null)
+        
+        // Reset file input
+        const fileInput = document.querySelector('input[type="file"]')
+        if (fileInput) fileInput.value = ''
+      }, 2000)
 
     } catch (error) {
       console.error('Upload error:', error)
       setMessage({ 
         type: 'error', 
-        text: `Failed to upload: ${error.message}` 
+        text: `❌ ${error.message}` 
       })
     } finally {
       setLoading(false)
@@ -191,12 +254,11 @@ export default function AdminUploadPage() {
             </label>
             <div className="flex gap-3">
               <input
-                type="number"
+                type="text"
                 value={tmdbId}
                 onChange={(e) => setTmdbId(e.target.value)}
                 placeholder="e.g., 155 (for The Dark Knight)"
                 className="flex-1 px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none"
-                required
               />
               <button
                 type="button"
@@ -208,7 +270,7 @@ export default function AdminUploadPage() {
               </button>
             </div>
             <p className="text-gray-400 text-sm mt-2">
-              Find the TMDb ID from <a href="https://www.themoviedb.org" target="_blank" className="text-blue-400 hover:underline">themoviedb.org</a>
+              Find the TMDb ID from the URL: themoviedb.org/movie/<strong>155</strong>
             </p>
           </div>
 
@@ -223,7 +285,6 @@ export default function AdminUploadPage() {
               onChange={(e) => setMovieTitle(e.target.value)}
               placeholder="e.g., The Dark Knight"
               className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none"
-              required
             />
           </div>
 
@@ -233,14 +294,11 @@ export default function AdminUploadPage() {
               Release Year *
             </label>
             <input
-              type="number"
+              type="text"
               value={movieYear}
               onChange={(e) => setMovieYear(e.target.value)}
               placeholder="e.g., 2008"
-              min="1900"
-              max="2030"
               className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none"
-              required
             />
           </div>
 
@@ -253,7 +311,6 @@ export default function AdminUploadPage() {
               value={genre}
               onChange={(e) => setGenre(e.target.value)}
               className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none"
-              required
             >
               <option value="hollywood">🎬 Hollywood</option>
               <option value="bollywood">🎭 Bollywood</option>
@@ -271,10 +328,9 @@ export default function AdminUploadPage() {
               accept="image/*"
               onChange={handleFileChange}
               className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer cursor-pointer"
-              required
             />
             <p className="text-gray-400 text-sm mt-2">
-              Max size: 5MB • Formats: JPG, PNG, WEBP
+              Max size: 5MB • Formats: JPG, PNG, WEBP • Selected: {imageFile?.name || 'None'}
             </p>
           </div>
 
@@ -284,34 +340,58 @@ export default function AdminUploadPage() {
               <label className="block text-white font-bold mb-2">
                 Preview
               </label>
-              <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden">
+              <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden border-2 border-green-500">
                 <img
                   src={imagePreview}
                   alt="Preview"
                   className="w-full h-full object-cover"
                 />
+                <div className="absolute top-2 right-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                  ✓ Image Ready
+                </div>
               </div>
             </div>
           )}
 
           {/* Message */}
           {message.text && (
-            <div className={`mb-6 p-4 rounded-lg ${
+            <div className={`mb-6 p-4 rounded-lg font-medium ${
               message.type === 'success' 
                 ? 'bg-green-500/20 border border-green-500 text-green-400' 
+                : message.type === 'info'
+                ? 'bg-blue-500/20 border border-blue-500 text-blue-400'
                 : 'bg-red-500/20 border border-red-500 text-red-400'
             }`}>
               {message.text}
             </div>
           )}
 
+          {/* Validation Status */}
+          <div className="mb-6 p-4 bg-gray-900 rounded-lg border border-gray-700">
+            <p className="text-white font-bold mb-2">Form Status:</p>
+            <div className="space-y-1 text-sm">
+              <div className={tmdbId ? 'text-green-400' : 'text-gray-500'}>
+                {tmdbId ? '✓' : '○'} TMDb ID: {tmdbId || 'Not entered'}
+              </div>
+              <div className={movieTitle ? 'text-green-400' : 'text-gray-500'}>
+                {movieTitle ? '✓' : '○'} Title: {movieTitle || 'Not entered'}
+              </div>
+              <div className={movieYear ? 'text-green-400' : 'text-gray-500'}>
+                {movieYear ? '✓' : '○'} Year: {movieYear || 'Not entered'}
+              </div>
+              <div className={imageFile ? 'text-green-400' : 'text-gray-500'}>
+                {imageFile ? '✓' : '○'} Image: {imageFile ? imageFile.name : 'Not selected'}
+              </div>
+            </div>
+          </div>
+
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !tmdbId || !movieTitle || !movieYear || !imageFile}
             className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-105 active:scale-95"
           >
-            {loading ? '⏳ Uploading...' : '✅ Upload Frame'}
+            {loading ? '⏳ Uploading...' : imageFile ? '✅ Upload Frame' : '⚠️ Select an Image First'}
           </button>
         </form>
 
@@ -319,12 +399,11 @@ export default function AdminUploadPage() {
         <div className="mt-8 bg-gray-800/50 backdrop-blur rounded-xl p-6 border border-gray-700">
           <h2 className="text-white font-bold text-xl mb-4">📋 How to Upload</h2>
           <ol className="text-gray-300 space-y-2">
-            <li>1. Go to <a href="https://www.themoviedb.org" target="_blank" className="text-blue-400 hover:underline">themoviedb.org</a> and search for your movie</li>
-            <li>2. Copy the movie ID from the URL (e.g., themoviedb.org/movie/<strong>155</strong> → ID is 155)</li>
-            <li>3. Enter the ID and click "Fetch Info" to auto-fill movie details</li>
-            <li>4. Select the genre (Hollywood/Bollywood/Both)</li>
-            <li>5. Upload a screenshot from the movie (use VLC or any screenshot tool)</li>
-            <li>6. Click "Upload Frame" to save to database</li>
+            <li>1. Enter TMDb ID and click "Fetch Info" (or enter manually)</li>
+            <li>2. Select genre (Hollywood/Bollywood/Both)</li>
+            <li>3. Click "Choose File" and select a movie screenshot</li>
+            <li>4. Verify the preview appears</li>
+            <li>5. Click "Upload Frame"</li>
           </ol>
         </div>
       </div>

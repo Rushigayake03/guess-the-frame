@@ -9,128 +9,106 @@ import AnswerInput from '@/components/AnswerInput'
 import GameControls from '@/components/GameControls'
 import Scoreboard from '@/components/Scoreboard'
 import ScorePopup from '@/components/ScorePopup'
-import { checkAnswer } from '@/lib/answer-matching'
-import { calculateScore } from '@/lib/utils'
+//import { checkAnswer } from '@/lib/answer-matching'
+//import { calculateScore } from '@/lib/utils'
+import { useGameSession } from '@/hooks/useGameSession'
+//import { supabase } from '../lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 function GameContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const gameMode = searchParams.get('mode') || 'mixed'
 
-  // Game state
-  const [currentFrameIndex, setCurrentFrameIndex] = useState(0)
-  const [score, setScore] = useState(0)
-  const [correctAnswers, setCorrectAnswers] = useState(0)
-  const [isRevealed, setIsRevealed] = useState(false)
-  const [timerActive, setTimerActive] = useState(false)
-  const [elapsedTime, setElapsedTime] = useState(0)
-  const [answerResult, setAnswerResult] = useState(null)
-  const [showingAnswer, setShowingAnswer] = useState(false)
   const [showScorePopup, setShowScorePopup] = useState(false)
   const [earnedPoints, setEarnedPoints] = useState(0)
-  const [gameComplete, setGameComplete] = useState(false)
 
-  // Mock frames data (we'll replace this with real data from Supabase later)
-  const mockFrames = [
-    {
-      id: 1,
-      imageUrl: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=800",
-      movieTitle: "The Dark Knight",
-      movieYear: 2008,
-      alternativeTitles: ["Dark Knight"]
-    },
-    {
-      id: 2,
-      imageUrl: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=800",
-      movieTitle: "Inception",
-      movieYear: 2010,
-      alternativeTitles: []
-    },
-    {
-      id: 3,
-      imageUrl: "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800",
-      movieTitle: "Interstellar",
-      movieYear: 2014,
-      alternativeTitles: []
-    },
-    // Add more mock frames as needed
-  ]
+  // USE THE HOOK INSTEAD OF MOCK DATA
+  const {
+    currentFrame,
+    currentFrameIndex,
+    score,
+    correctAnswers,
+    isRevealed,
+    timerActive,
+    elapsedTime,
+    answerResult,
+    showingAnswer,
+    loading,
+    error,
+    gameComplete,
+    totalFrames,
+    handleReveal,
+    handleSubmitAnswer,
+    handleTimeUp,
+    handleNextFrame,
+    handleShowAnswer,
+    setElapsedTime,
+  } = useGameSession(gameMode, 20)
 
-  const totalFrames = 20
-  const currentFrame = mockFrames[currentFrameIndex % mockFrames.length]
-
-  // Handle reveal button
-  const handleReveal = () => {
-    setIsRevealed(true)
-    setTimerActive(true)
-    setElapsedTime(0)
-  }
-
-  // Handle answer submission
-  const handleSubmitAnswer = (userAnswer) => {
-    if (!isRevealed || !timerActive) return
-
-    // Stop timer
-    setTimerActive(false)
-
-    // Check if answer is correct
-    const correctAnswersList = [
-      currentFrame.movieTitle,
-      `${currentFrame.movieTitle} (${currentFrame.movieYear})`,
-      ...currentFrame.alternativeTitles
-    ]
-
-    const result = checkAnswer(userAnswer, correctAnswersList)
-    
-    // Calculate points
-    const points = calculateScore(elapsedTime, result.isCorrect)
-
-    // Update state
-    setAnswerResult(result.isCorrect)
-    
-    if (result.isCorrect) {
-      setScore(score + points)
-      setCorrectAnswers(correctAnswers + 1)
-      setEarnedPoints(points)
+  // Handle answer submission with popup
+  const onSubmitAnswer = async (userAnswer) => {
+    const result = await handleSubmitAnswer(userAnswer)
+    if (result && result.isCorrect && result.points > 0) {
+      setEarnedPoints(result.points)
       setShowScorePopup(true)
     }
   }
 
-  // Handle time up
-  const handleTimeUp = () => {
-    setTimerActive(false)
-    setAnswerResult(false)
-  }
-
-  // Handle next frame
-  const handleNextFrame = () => {
-    if (currentFrameIndex + 1 >= totalFrames) {
-      // Game complete
-      setGameComplete(true)
-      return
-    }
-
-    // Reset for next frame
-    setCurrentFrameIndex(currentFrameIndex + 1)
-    setIsRevealed(false)
-    setTimerActive(false)
-    setElapsedTime(0)
-    setAnswerResult(null)
-    setShowingAnswer(false)
-  }
-
-  // Handle show answer
-  const handleShowAnswer = () => {
-    setShowingAnswer(true)
-    setTimerActive(false)
-  }
-
-  // Redirect if game complete
+  // Redirect when game is complete
   useEffect(() => {
     if (gameComplete) {
       router.push(`/results?score=${score}&correct=${correctAnswers}&total=${totalFrames}&mode=${gameMode}`)
     }
   }, [gameComplete, score, correctAnswers, totalFrames, gameMode, router])
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-white text-xl">Loading game...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center p-8">
+        <div className="max-w-md bg-red-500/20 border border-red-500 rounded-2xl p-8 text-center">
+          <div className="text-6xl mb-4">❌</div>
+          <h2 className="text-2xl font-bold text-white mb-4">Error Loading Game</h2>
+          <p className="text-red-300 mb-6">{error}</p>
+          <div className="space-y-3">
+            <button
+              onClick={() => router.push('/admin/upload')}
+              className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition"
+            >
+              Upload Frames
+            </button>
+            <button
+              onClick={() => router.push('/play')}
+              className="block w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition"
+            >
+              Back to Game Modes
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // No current frame
+  if (!currentFrame) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center">
+        <p className="text-white text-xl">No frames available</p>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
@@ -140,7 +118,7 @@ function GameContent() {
           <h1 className="text-3xl font-bold text-white">
             🎬 Guess the Frame
           </h1>
-          <div className="text-white/60">
+          <div className="text-white/60 text-lg">
             Frame {currentFrameIndex + 1} / {totalFrames}
           </div>
         </div>
@@ -150,9 +128,9 @@ function GameContent() {
           <div className="lg:col-span-2 space-y-6">
             {/* Movie Frame */}
             <BlurredFrame
-              imageUrl={currentFrame.imageUrl}
+              imageUrl={currentFrame.image_url}
               isRevealed={isRevealed}
-              movieTitle={currentFrame.movieTitle}
+              movieTitle={currentFrame.movies.title}
             />
 
             {/* Timer (only show after reveal) */}
@@ -168,7 +146,7 @@ function GameContent() {
             {/* Answer Input (only show after reveal) */}
             {isRevealed && !showingAnswer && (
               <AnswerInput
-                onSubmit={handleSubmitAnswer}
+                onSubmit={onSubmitAnswer}
                 disabled={!timerActive}
                 isCorrect={answerResult}
               />
@@ -180,7 +158,7 @@ function GameContent() {
               onNext={handleNextFrame}
               onShowAnswer={handleShowAnswer}
               isRevealed={isRevealed}
-              correctAnswer={currentFrame.movieTitle}
+              correctAnswer={currentFrame.movies.title}
               showingAnswer={showingAnswer}
             />
           </div>

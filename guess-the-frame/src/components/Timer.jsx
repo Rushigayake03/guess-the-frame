@@ -1,31 +1,41 @@
-// components/Timer.jsx
+// src/components/Timer.jsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export default function Timer({ duration = 20, onTimeUp, isActive, onTick }) {
   const [timeLeft, setTimeLeft] = useState(duration)
+
+  // Wrap onTick in useCallback to prevent re-renders
+  const handleTick = useCallback((elapsed) => {
+    if (onTick) {
+      onTick(elapsed)
+    }
+  }, [onTick])
 
   useEffect(() => {
     if (!isActive) return
 
     if (timeLeft <= 0) {
-      onTimeUp?.()
+      if (onTimeUp) {
+        onTimeUp()
+      }
       return
     }
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         const newTime = prev - 1
-        onTick?.(duration - newTime) // Pass elapsed time to parent
+        // Call onTick INSIDE the interval, not during render
+        handleTick(duration - newTime)
         return newTime
       })
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [timeLeft, isActive, onTimeUp, onTick, duration])
+  }, [timeLeft, isActive, onTimeUp, handleTick, duration])
 
-  // Reset timer when duration changes
+  // Reset when duration changes
   useEffect(() => {
     setTimeLeft(duration)
   }, [duration])
