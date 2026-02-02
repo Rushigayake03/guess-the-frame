@@ -7,8 +7,14 @@ export default function Home() {
       <div className="container mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-16">
+          
           <h1 className="text-7xl font-bold text-white mb-4 tracking-tight">
-            🎬 Guess the Frame
+             <img 
+            src="/images/movie-camera-svgrepo-com.svg" 
+            alt="Guess the Frame Logo" 
+            className="inline-block w-16 h-16 mr-4"
+          />
+             Guess the Frame
           </h1>
           <p className="text-2xl text-gray-300">
             Can you guess the movie from a single frame?
