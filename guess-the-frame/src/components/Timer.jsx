@@ -1,24 +1,29 @@
 // src/components/Timer.jsx
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 export default function Timer({ duration = 20, onTimeUp, isActive, onTick }) {
   const [timeLeft, setTimeLeft] = useState(duration)
+  const onTickRef = useRef(onTick)
+  const onTimeUpRef = useRef(onTimeUp)
 
-  // Wrap onTick in useCallback to prevent re-renders
-  const handleTick = useCallback((elapsed) => {
-    if (onTick) {
-      onTick(elapsed)
-    }
+  // Update refs when callbacks change (avoids stale closures)
+  useEffect(() => {
+    onTickRef.current = onTick
   }, [onTick])
+
+  useEffect(() => {
+    onTimeUpRef.current = onTimeUp
+  }, [onTimeUp])
 
   useEffect(() => {
     if (!isActive) return
 
     if (timeLeft <= 0) {
-      if (onTimeUp) {
-        onTimeUp()
+      // Use ref to call onTimeUp
+      if (onTimeUpRef.current) {
+        onTimeUpRef.current()
       }
       return
     }
@@ -26,14 +31,25 @@ export default function Timer({ duration = 20, onTimeUp, isActive, onTick }) {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         const newTime = prev - 1
-        // Call onTick INSIDE the interval, not during render
-        handleTick(duration - newTime)
+        
+        // Defer the callback to next tick to avoid setState during render
+        if (onTickRef.current && newTime >= 0) {
+          const elapsed = duration - newTime
+          
+          // Use setTimeout to schedule after current render
+          setTimeout(() => {
+            if (onTickRef.current) {
+              onTickRef.current(elapsed)
+            }
+          }, 0)
+        }
+        
         return newTime
       })
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [timeLeft, isActive, onTimeUp, handleTick, duration])
+  }, [timeLeft, isActive, duration])
 
   // Reset when duration changes
   useEffect(() => {
