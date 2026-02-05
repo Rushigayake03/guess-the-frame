@@ -1,4 +1,4 @@
-// app/admin/frames/page.js
+// src/app/admin/frames/page.js
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -9,6 +9,8 @@ export default function ManageFramesPage() {
   const [frames, setFrames] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('all')
+  const [editingMovie, setEditingMovie] = useState(null)
+  const [editForm, setEditForm] = useState({ title: '', year: '', genre: '' })
 
   useEffect(() => {
     fetchFrames()
@@ -26,7 +28,8 @@ export default function ManageFramesPage() {
             tmdb_id,
             title,
             year,
-            genre
+            genre,
+            original_title
           )
         `)
         .order('created_at', { ascending: false })
@@ -53,14 +56,16 @@ export default function ManageFramesPage() {
     try {
       // Extract file path from URL
       const urlParts = imageUrl.split('/movie-frames/')
-      const filePath = urlParts[1]
+      if (urlParts.length > 1) {
+        const filePath = urlParts[1]
 
-      // Delete from storage
-      const { error: storageError } = await supabase.storage
-        .from('movie-frames')
-        .remove([filePath])
+        // Delete from storage
+        const { error: storageError } = await supabase.storage
+          .from('movie-frames')
+          .remove([filePath])
 
-      if (storageError) console.error('Storage delete error:', storageError)
+        if (storageError) console.error('Storage delete error:', storageError)
+      }
 
       // Delete from database
       const { error: dbError } = await supabase
@@ -78,6 +83,41 @@ export default function ManageFramesPage() {
     }
   }
 
+  const startEdit = (movie) => {
+    setEditingMovie(movie.id)
+    setEditForm({
+      title: movie.title,
+      year: movie.year,
+      genre: movie.genre
+    })
+  }
+
+  const cancelEdit = () => {
+    setEditingMovie(null)
+    setEditForm({ title: '', year: '', genre: '' })
+  }
+
+  const saveEdit = async (movieId) => {
+    try {
+      const { error } = await supabase
+        .from('movies')
+        .update({
+          title: editForm.title,
+          year: parseInt(editForm.year),
+          genre: editForm.genre
+        })
+        .eq('id', movieId)
+
+      if (error) throw error
+
+      alert('Movie updated successfully!')
+      setEditingMovie(null)
+      fetchFrames()
+    } catch (error) {
+      alert('Failed to update movie: ' + error.message)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-8">
       <div className="max-w-7xl mx-auto">
@@ -91,12 +131,20 @@ export default function ManageFramesPage() {
               Total frames: {frames.length}
             </p>
           </div>
-          <Link
-            href="/admin/upload"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition"
-          >
-            + Upload New Frame
-          </Link>
+          <div className="flex gap-3">
+            <Link
+              href="/admin/upload"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition"
+            >
+              + Upload New Frame
+            </Link>
+            <Link
+              href="/"
+              className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition"
+            >
+              ← Back to Home
+            </Link>
+          </div>
         </div>
 
         {/* Filter */}
@@ -166,29 +214,83 @@ export default function ManageFramesPage() {
 
                 {/* Frame Info */}
                 <div className="p-4">
-                  <h3 className="text-white font-bold text-lg mb-1">
-                    {frame.movies?.title}
-                  </h3>
-                  <p className="text-gray-400 text-sm mb-3">
-                    {frame.movies?.year} • TMDb ID: {frame.movies?.tmdb_id}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                      frame.movies?.genre === 'hollywood'
-                        ? 'bg-blue-500/20 text-blue-400'
-                        : frame.movies?.genre === 'bollywood'
-                        ? 'bg-orange-500/20 text-orange-400'
-                        : 'bg-purple-500/20 text-purple-400'
-                    }`}>
-                      {frame.movies?.genre}
-                    </span>
-                    <button
-                      onClick={() => deleteFrame(frame.id, frame.image_url)}
-                      className="text-red-400 hover:text-red-300 text-sm font-bold transition"
-                    >
-                      🗑️ Delete
-                    </button>
-                  </div>
+                  {editingMovie === frame.movies?.id ? (
+                    // Edit Form
+                    <div className="space-y-3">
+                      <input
+                        type="text"
+                        value={editForm.title}
+                        onChange={(e) => setEditForm({...editForm, title: e.target.value})}
+                        className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+                        placeholder="Title"
+                      />
+                      <input
+                        type="number"
+                        value={editForm.year}
+                        onChange={(e) => setEditForm({...editForm, year: e.target.value})}
+                        className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+                        placeholder="Year"
+                      />
+                      <select
+                        value={editForm.genre}
+                        onChange={(e) => setEditForm({...editForm, genre: e.target.value})}
+                        className="w-full px-3 py-2 bg-gray-900 text-white rounded"
+                      >
+                        <option value="hollywood">Hollywood</option>
+                        <option value="bollywood">Bollywood</option>
+                        <option value="both">Both</option>
+                      </select>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => saveEdit(frame.movies.id)}
+                          className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded transition"
+                        >
+                          ✓ Save
+                        </button>
+                        <button
+                          onClick={cancelEdit}
+                          className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 rounded transition"
+                        >
+                          ✗ Cancel
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    // Display Mode
+                    <>
+                      <h3 className="text-white font-bold text-lg mb-1">
+                        {frame.movies?.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm mb-3">
+                        {frame.movies?.year} • TMDb: {frame.movies?.tmdb_id}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                          frame.movies?.genre === 'hollywood'
+                            ? 'bg-blue-500/20 text-blue-400'
+                            : frame.movies?.genre === 'bollywood'
+                            ? 'bg-orange-500/20 text-orange-400'
+                            : 'bg-purple-500/20 text-purple-400'
+                        }`}>
+                          {frame.movies?.genre}
+                        </span>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => startEdit(frame.movies)}
+                            className="text-blue-400 hover:text-blue-300 text-sm font-bold transition"
+                          >
+                            ✏️ Edit
+                          </button>
+                          <button
+                            onClick={() => deleteFrame(frame.id, frame.image_url)}
+                            className="text-red-400 hover:text-red-300 text-sm font-bold transition"
+                          >
+                            🗑️ Delete
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
