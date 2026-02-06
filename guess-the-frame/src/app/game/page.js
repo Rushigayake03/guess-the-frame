@@ -23,7 +23,7 @@ function GameContent() {
   const [showScorePopup, setShowScorePopup] = useState(false)
   const [earnedPoints, setEarnedPoints] = useState(0)
 
-  // USE THE HOOK INSTEAD OF MOCK DATA
+  // USE THE HOOK - only pass gameMode
   const {
     currentFrame,
     currentFrameIndex,
@@ -44,7 +44,7 @@ function GameContent() {
     handleNextFrame,
     handleShowAnswer,
     setElapsedTime,
-  } = useGameSession(gameMode, 20)
+  } = useGameSession(gameMode)
 
   // Handle answer submission with popup
   const onSubmitAnswer = async (userAnswer) => {
@@ -101,11 +101,19 @@ function GameContent() {
     )
   }
 
-  // No current frame
+  // No frames available
   if (!currentFrame) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center">
-        <p className="text-white text-xl">No frames available</p>
+        <div className="text-center">
+          <p className="text-white text-xl mb-4">No frames available</p>
+          <button
+            onClick={() => router.push('/admin/upload')}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition"
+          >
+            Upload Frames
+          </button>
+        </div>
       </div>
     )
   }
@@ -130,7 +138,7 @@ function GameContent() {
             <BlurredFrame
               imageUrl={currentFrame.image_url}
               isRevealed={isRevealed}
-              movieTitle={currentFrame.movies.title}
+              movieTitle={currentFrame.movies?.title || 'Unknown'}
             />
 
             {/* Timer (only show after reveal) */}
@@ -158,7 +166,7 @@ function GameContent() {
               onNext={handleNextFrame}
               onShowAnswer={handleShowAnswer}
               isRevealed={isRevealed}
-              correctAnswer={currentFrame.movies.title}
+              correctAnswer={currentFrame.movies?.title || 'Unknown'}
               showingAnswer={showingAnswer}
             />
           </div>

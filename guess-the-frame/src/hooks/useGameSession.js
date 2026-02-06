@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { checkAnswer } from '@/lib/answer-matching'
 import { calculateScore } from '@/lib/utils'
 
-export function useGameSession(gameMode = 'mixed', packId = null) {
+export function useGameSession(gameMode = 'mixed') {
   const [frames, setFrames] = useState([])
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0)
   const [score, setScore] = useState(0)
@@ -23,22 +23,23 @@ export function useGameSession(gameMode = 'mixed', packId = null) {
   // Fetch frames from Supabase on mount
   useEffect(() => {
     fetchFrames()
-  }, [gameMode, packId])
+  }, [gameMode])
 
   const fetchFrames = async () => {
     setLoading(true)
     setError(null)
 
     try {
-      console.log('Fetching frames for mode:', gameMode, 'pack:', packId)
+      console.log('Fetching frames for mode:', gameMode)
 
-      // Build query based on game mode and pack
+      // Build query - use !inner to ensure movies exist
       let query = supabase
         .from('frames')
         .select(`
           id,
           image_url,
-          movies (
+          movie_id,
+          movies!inner (
             id,
             tmdb_id,
             title,
@@ -47,26 +48,24 @@ export function useGameSession(gameMode = 'mixed', packId = null) {
             genre
           )
         `)
+        .not('movies', 'is', null)
 
-      // Filter by pack if specified
-      if (packId) {
-        query = query.eq('pack_id', packId)
-      }
-
-      // Filter by genre if not using pack
-      if (!packId) {
-        if (gameMode === 'hollywood') {
-          query = query.eq('movies.genre', 'hollywood')
-        } else if (gameMode === 'bollywood') {
-          query = query.eq('movies.genre', 'bollywood')
-        }
+      // Filter by genre
+      if (gameMode === 'hollywood') {
+        query = query.eq('movies.genre', 'hollywood')
+      } else if (gameMode === 'bollywood') {
+        query = query.eq('movies.genre', 'bollywood')
       }
 
       const { data, error: fetchError } = await query
 
       console.log('Fetched data:', data)
+      console.log('Fetch error:', fetchError)
 
-      if (fetchError) throw fetchError
+      if (fetchError) {
+        console.error('Supabase error:', fetchError)
+        throw fetchError
+      }
 
       if (!data || data.length === 0) {
         setError('No frames available for this game mode. Please upload some frames first!')
@@ -74,8 +73,19 @@ export function useGameSession(gameMode = 'mixed', packId = null) {
         return
       }
 
+      // Verify all frames have movie data
+      const validFrames = data.filter(frame => frame.movies && frame.movies.title)
+      
+      if (validFrames.length === 0) {
+        setError('Frames found but missing movie data. Please check your database.')
+        setLoading(false)
+        return
+      }
+
+      console.log('Valid frames with movie data:', validFrames.length)
+
       // Shuffle frames randomly
-      const shuffled = data.sort(() => Math.random() - 0.5)
+      const shuffled = validFrames.sort(() => Math.random() - 0.5)
 
       // Take up to 20 frames
       const selectedFrames = shuffled.slice(0, Math.min(20, shuffled.length))
@@ -85,7 +95,7 @@ export function useGameSession(gameMode = 'mixed', packId = null) {
 
     } catch (err) {
       console.error('Error fetching frames:', err)
-      setError(err.message)
+      setError(err.message || 'Failed to load frames')
     } finally {
       setLoading(false)
     }
@@ -107,11 +117,18 @@ export function useGameSession(gameMode = 'mixed', packId = null) {
 
     setTimerActive(false)
 
-    // Prepare correct answers
+    // Add null checks for movies object
+    if (!currentFrame.movies) {
+      console.error('Current frame has no movie data:', currentFrame)
+      setAnswerResult(false)
+      return { isCorrect: false, points: 0 }
+    }
+
+    // Prepare correct answers with null checks
     const correctAnswersList = [
       currentFrame.movies.title,
       currentFrame.movies.original_title,
-      `${currentFrame.movies.title} (${currentFrame.movies.year})`
+      currentFrame.movies.year ? `${currentFrame.movies.title} (${currentFrame.movies.year})` : null
     ].filter(Boolean)
 
     // Check answer
