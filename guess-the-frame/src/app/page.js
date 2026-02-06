@@ -15,25 +15,27 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Game Modes */}
+        {/* Main Actions */}
         <div className="max-w-2xl mx-auto space-y-6">
+          {/* Play Game Button */}
           <Link 
             href="/play"
             className="block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-6 px-8 rounded-2xl text-2xl transition-all transform hover:scale-105 shadow-lg"
           >
             <div className="flex items-center justify-between">
               <span>🎮 Start Playing</span>
-              <span className="text-sm opacity-80">20 Frames Challenge</span>
+              <span className="text-sm opacity-80">Choose Your Mode</span>
             </div>
           </Link>
 
+          {/* Admin Panel Button */}
           <Link 
-            href="/admin/upload"
+            href="/admin/packs"
             className="block bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-6 px-8 rounded-2xl text-2xl transition-all transform hover:scale-105 shadow-lg"
           >
             <div className="flex items-center justify-between">
               <span>🔧 Admin Panel</span>
-              <span className="text-sm opacity-80">Manage Frames</span>
+              <span className="text-sm opacity-80">Manage Frames & Packs</span>
             </div>
           </Link>
         </div>
@@ -51,9 +53,9 @@ export default function Home() {
             <p className="text-gray-400 text-sm">Choose your favorite movies</p>
           </div>
           <div className="text-center text-white">
-            <div className="text-4xl mb-2">📱</div>
-            <h3 className="font-bold mb-2">Share Results</h3>
-            <p className="text-gray-400 text-sm">Challenge friends on social media</p>
+            <div className="text-4xl mb-2">📦</div>
+            <h3 className="font-bold mb-2">Themed Packs</h3>
+            <p className="text-gray-400 text-sm">Play curated collections</p>
           </div>
         </div>
       </div>

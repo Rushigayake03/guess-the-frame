@@ -19,6 +19,7 @@ function GameContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const gameMode = searchParams.get('mode') || 'mixed'
+  const packId = searchParams.get('pack') || null 
 
   const [showScorePopup, setShowScorePopup] = useState(false)
   const [earnedPoints, setEarnedPoints] = useState(0)
@@ -44,7 +45,7 @@ function GameContent() {
     handleNextFrame,
     handleShowAnswer,
     setElapsedTime,
-  } = useGameSession(gameMode)
+  } = useGameSession(gameMode, packId)
 
   // Handle answer submission with popup
   const onSubmitAnswer = async (userAnswer) => {
@@ -60,7 +61,7 @@ function GameContent() {
     if (gameComplete) {
       router.push(`/results?score=${score}&correct=${correctAnswers}&total=${totalFrames}&mode=${gameMode}`)
     }
-  }, [gameComplete, score, correctAnswers, totalFrames, gameMode, router])
+  }, [gameComplete, score, correctAnswers, totalFrames, gameMode, packId, router])
 
   // Loading state
   if (loading) {

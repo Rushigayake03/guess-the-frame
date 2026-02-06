@@ -132,6 +132,11 @@ export default function ManageFramesPage() {
             </p>
           </div>
           <div className="flex gap-3">
+              <Link
+                href="/admin/packs"
+                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition">
+                📦 Manage Packs
+            </Link>
             <Link
               href="/admin/upload"
               className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition"
