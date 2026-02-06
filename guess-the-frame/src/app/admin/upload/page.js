@@ -1,61 +1,80 @@
-// app/admin/upload/page.js
+// src/app/admin/upload/page.js
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
+import Link from 'next/link'
 
 export default function AdminUploadPage() {
   const [tmdbId, setTmdbId] = useState('')
   const [movieTitle, setMovieTitle] = useState('')
   const [movieYear, setMovieYear] = useState('')
   const [genre, setGenre] = useState('hollywood')
+  const [packId, setPackId] = useState('')
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState(null)
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState({ type: '', text: '' })
   const [fetchingMovie, setFetchingMovie] = useState(false)
+  const [packs, setPacks] = useState([])
+
+  // Fetch available packs
+  useEffect(() => {
+    fetchPacks()
+  }, [])
+
+  const fetchPacks = async () => {
+    try {
+      const { data } = await supabase
+        .from('packs')
+        .select('*')
+        .order('name')
+      setPacks(data || [])
+    } catch (error) {
+      console.error('Error fetching packs:', error)
+    }
+  }
 
   // Fetch movie details from TMDb via our API route
   const fetchMovieFromTMDb = async () => {
-  if (!tmdbId) {
-    setMessage({ type: 'error', text: 'Please enter a TMDb ID' })
-    return
-  }
-
-  setFetchingMovie(true)
-  setMessage({ type: '', text: '' })
-
-  try {
-    // NEW: Use query parameter route
-    const response = await fetch(`/api/tmdb-fetch?id=${tmdbId}`)
-
-    console.log('API Response status:', response.status)
-
-    if (!response.ok) {
-      const errorData = await response.json()
-      console.error('API Error:', errorData)
-      throw new Error(errorData.error || 'Movie not found')
+    if (!tmdbId) {
+      setMessage({ type: 'error', text: 'Please enter a TMDb ID' })
+      return
     }
 
-    const data = await response.json()
-    console.log('Movie data:', data)
-    
-    setMovieTitle(data.title)
-    setMovieYear(data.year.toString())
-    setMessage({ 
-      type: 'success', 
-      text: `✅ Found: ${data.title} (${data.year})` 
-    })
-  } catch (error) {
-    console.error('Fetch error:', error)
-    setMessage({ 
-      type: 'error', 
-      text: `❌ Failed to fetch movie: ${error.message}` 
-    })
-  } finally {
-    setFetchingMovie(false)
+    setFetchingMovie(true)
+    setMessage({ type: '', text: '' })
+
+    try {
+      const response = await fetch(`/api/tmdb-fetch?id=${tmdbId}`)
+
+      console.log('API Response status:', response.status)
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error('API Error:', errorData)
+        throw new Error(errorData.error || 'Movie not found')
+      }
+
+      const data = await response.json()
+      console.log('Movie data:', data)
+      
+      setMovieTitle(data.title)
+      setMovieYear(data.year.toString())
+      setMessage({ 
+        type: 'success', 
+        text: `✅ Found: ${data.title} (${data.year})` 
+      })
+    } catch (error) {
+      console.error('Fetch error:', error)
+      setMessage({ 
+        type: 'error', 
+        text: `❌ Failed to fetch movie: ${error.message}` 
+      })
+    } finally {
+      setFetchingMovie(false)
+    }
   }
-}
 
   // Handle file selection
   const handleFileChange = (e) => {
@@ -193,7 +212,8 @@ export default function AdminUploadPage() {
         .from('frames')
         .insert({
           movie_id: movieId,
-          image_url: publicUrl
+          image_url: publicUrl,
+          pack_id: packId || null
         })
 
       if (frameError) {
@@ -213,6 +233,7 @@ export default function AdminUploadPage() {
         setMovieTitle('')
         setMovieYear('')
         setGenre('hollywood')
+        setPackId('')
         setImageFile(null)
         setImagePreview(null)
         
@@ -238,11 +259,33 @@ export default function AdminUploadPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">
-            🎬 Admin Upload Tool
+            🎬 Upload Movie Frame
           </h1>
           <p className="text-gray-300 text-lg">
-            Upload movie frames to the database
+            Add new movie frames to the database
           </p>
+        </div>
+
+        {/* Navigation */}
+        <div className="flex gap-3 mb-8">
+          <Link
+            href="/admin"
+            className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition"
+          >
+            ← Admin Dashboard
+          </Link>
+          <Link
+            href="/admin/frames"
+            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition"
+          >
+            View Frames
+          </Link>
+          <Link
+            href="/admin/packs"
+            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition"
+          >
+            Manage Packs
+          </Link>
         </div>
 
         {/* Upload Form */}
@@ -316,6 +359,28 @@ export default function AdminUploadPage() {
               <option value="bollywood">🎭 Bollywood</option>
               <option value="both">🌍 Both</option>
             </select>
+          </div>
+
+          {/* Pack Assignment (Optional) */}
+          <div className="mb-6">
+            <label className="block text-white font-bold mb-2">
+              Assign to Pack (Optional)
+            </label>
+            <select
+              value={packId}
+              onChange={(e) => setPackId(e.target.value)}
+              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none"
+            >
+              <option value="">None - Just add to general pool</option>
+              {packs.map(pack => (
+                <option key={pack.id} value={pack.id}>
+                  {pack.name} ({pack.frame_count || 0} frames)
+                </option>
+              ))}
+            </select>
+            <p className="text-gray-400 text-sm mt-2">
+              Organize frames into themed collections
+            </p>
           </div>
 
           {/* Image Upload */}
@@ -401,9 +466,10 @@ export default function AdminUploadPage() {
           <ol className="text-gray-300 space-y-2">
             <li>1. Enter TMDb ID and click "Fetch Info" (or enter manually)</li>
             <li>2. Select genre (Hollywood/Bollywood/Both)</li>
-            <li>3. Click "Choose File" and select a movie screenshot</li>
-            <li>4. Verify the preview appears</li>
-            <li>5. Click "Upload Frame"</li>
+            <li>3. (Optional) Assign to a pack for themed collections</li>
+            <li>4. Click "Choose File" and select a movie screenshot</li>
+            <li>5. Verify the preview appears</li>
+            <li>6. Click "Upload Frame"</li>
           </ol>
         </div>
       </div>

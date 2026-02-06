@@ -1,4 +1,4 @@
-// app/page.js
+// src/app/page.js
 import Link from 'next/link'
 
 export default function Home() {
@@ -7,58 +7,35 @@ export default function Home() {
       <div className="container mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-16">
-          
           <h1 className="text-7xl font-bold text-white mb-4 tracking-tight">
-             <img 
-            src="/images/movie-camera-svgrepo-com.svg" 
-            alt="Guess the Frame Logo" 
-            className="inline-block w-16 h-16 mr-4"
-          />
-             Guess the Frame
+            🎬 Guess the Frame
           </h1>
           <p className="text-2xl text-gray-300">
             Can you guess the movie from a single frame?
           </p>
         </div>
 
-        {/* Game Modes */}
+        {/* Main Actions */}
         <div className="max-w-2xl mx-auto space-y-6">
+          {/* Play Game Button */}
           <Link 
             href="/play"
             className="block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-6 px-8 rounded-2xl text-2xl transition-all transform hover:scale-105 shadow-lg"
           >
             <div className="flex items-center justify-between">
-              <span>🎮 Play Solo</span>
-              <span className="text-sm opacity-80">20 Frames Challenge</span>
+              <span>🎮 Start Playing</span>
+              <span className="text-sm opacity-80">Choose Your Mode</span>
             </div>
           </Link>
 
+          {/* Admin Panel Button */}
           <Link 
-            href="/multiplayer"
-            className="block bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-bold py-6 px-8 rounded-2xl text-2xl transition-all transform hover:scale-105 shadow-lg"
+            href="/admin/packs"
+            className="block bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-6 px-8 rounded-2xl text-2xl transition-all transform hover:scale-105 shadow-lg"
           >
             <div className="flex items-center justify-between">
-              <span>👥 Multiplayer</span>
-              <span className="text-sm opacity-80">Play with Friends</span>
-            </div>
-          </Link>
-
-          <Link 
-            href="/leaderboard"
-            className="block bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-6 px-8 rounded-2xl text-2xl transition-all transform hover:scale-105 shadow-lg"
-          >
-            <div className="flex items-center justify-between">
-              <span>🏆 Leaderboard</span>
-              <span className="text-sm opacity-80">Top Players</span>
-            </div>
-          </Link>
-
-          <Link 
-            href="/admin/upload"
-            className="block bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-6 px-8 rounded-2xl text-2xl transition-all transform hover:scale-105 shadow-lg">
-            <div className="flex items-center justify-between">
-              <span>🔧 Admin Upload</span>
-              <span className="text-sm opacity-80">Upload Frames</span>
+              <span>🔧 Admin Panel</span>
+              <span className="text-sm opacity-80">Manage Frames & Packs</span>
             </div>
           </Link>
         </div>
@@ -76,9 +53,9 @@ export default function Home() {
             <p className="text-gray-400 text-sm">Choose your favorite movies</p>
           </div>
           <div className="text-center text-white">
-            <div className="text-4xl mb-2">📱</div>
-            <h3 className="font-bold mb-2">Share Results</h3>
-            <p className="text-gray-400 text-sm">Challenge friends on social media</p>
+            <div className="text-4xl mb-2">📦</div>
+            <h3 className="font-bold mb-2">Themed Packs</h3>
+            <p className="text-gray-400 text-sm">Play curated collections</p>
           </div>
         </div>
       </div>
