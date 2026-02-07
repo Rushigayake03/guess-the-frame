@@ -2,14 +2,219 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #3b82f6;
+  --color-primary: #eab308;
   --color-secondary: #8b5cf6;
   --font-sans: 'Inter', system-ui, sans-serif;
 }
 
-/* Custom utilities */
+/* Custom Keyframe Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes scale-in {
+  0% { 
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-pop {
+  0% { 
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.1);
+  }
+  100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce-once {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes particle {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(cos(var(--angle)) * 150px),
+      calc(sin(var(--angle)) * 150px)
+    ) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-down {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-up {
+  0% {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-left {
+  0% {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Animation Classes */
 @layer utilities {
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out;
+  }
+
+  .animate-scale-pop {
+    animation: scale-pop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .animate-bounce-once {
+    animation: bounce-once 1s ease-in-out;
+  }
+
+  .animate-particle {
+    animation: particle 1s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+
+  .animate-slide-in-down {
+    animation: slide-in-down 0.6s ease-out;
+  }
+
+  .animate-slide-in-up {
+    animation: slide-in-up 0.6s ease-out;
+  }
+
+  .animate-slide-in-left {
+    animation: slide-in-left 0.6s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.6s ease-out;
+  }
+
+  .animate-ping-slow {
+    animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  /* Gradient Utilities */
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+
+  /* Text Balance */
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Cinematic Text Shadow */
+  .drop-shadow-cinematic {
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.8));
+  }
+}
+
+/* Custom Scrollbar for Cinematic Feel */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #eab308, #f59e0b);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #f59e0b, #eab308);
+}
+
+/* Selection Color */
+::selection {
+  background: rgba(234, 179, 8, 0.3);
+  color: white;
+}
+
+/* Smooth Transitions for All Interactive Elements */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
 }
