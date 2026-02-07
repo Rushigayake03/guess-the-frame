@@ -4,6 +4,9 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import AdminAuthGuard from '@/components/AdminAuthGuard'
+import AdminHeader from '@/components/AdminHeader'
+
 
 export default function ManageFramesPage() {
   const [frames, setFrames] = useState([])
@@ -119,7 +122,10 @@ export default function ManageFramesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-8">
+    <AdminAuthGuard>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-8">
+        <AdminHeader />
+            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -303,5 +309,7 @@ export default function ManageFramesPage() {
         )}
       </div>
     </div>
+      </div>
+    </AdminAuthGuard>
   )
 }

@@ -30,12 +30,11 @@ export default function Home() {
 
           {/* Admin Panel Button */}
           <Link 
-            href="/admin/packs"
-            className="block bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-6 px-8 rounded-2xl text-2xl transition-all transform hover:scale-105 shadow-lg"
-          >
+            href="/admin"
+            className="block bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-bold py-6 px-8 rounded-2xl text-2xl transition-all transform hover:scale-105 shadow-lg">
             <div className="flex items-center justify-between">
-              <span>🔧 Admin Panel</span>
-              <span className="text-sm opacity-80">Manage Frames & Packs</span>
+              <span>🔐 Admin Panel</span>
+              <span className="text-sm opacity-80">Login Required</span>
             </div>
           </Link>
         </div>
