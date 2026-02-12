@@ -97,14 +97,14 @@ function ResultsContent() {
         <div className="max-w-2xl mx-auto space-y-4">
           <button
             onClick={() => router.push(`/game?mode=${mode}`)}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-[1.02]"
           >
             🔄 Play Again
           </button>
 
           <button
             onClick={shareResults}
-            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-[1.02]"
           >
             📱 Share Results
           </button>

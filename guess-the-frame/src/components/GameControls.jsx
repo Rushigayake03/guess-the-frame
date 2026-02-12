@@ -11,12 +11,12 @@ export default function GameControls({
   showingAnswer = false
 }) {
   return (
-    <div className="flex flex-col gap-3 w-full">
+    <div className="flex flex-col gap-2.5 w-full">
       {/* Reveal Button (only shown before reveal) */}
       {!isRevealed && (
         <button
           onClick={onReveal}
-          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-105 active:scale-95 shadow-lg"
+          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-3 px-6 rounded-xl text-base transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg"
         >
           🔍 Reveal Frame
         </button>
@@ -24,17 +24,17 @@ export default function GameControls({
 
       {/* Action Buttons (shown after reveal) */}
       {isRevealed && (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2.5">
           <button
             onClick={onShowAnswer}
-            className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-105 active:scale-95"
+            className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98]"
           >
             💡 Show Answer
           </button>
 
           <button
             onClick={onNext}
-            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 px-6 rounded-xl transition-all transform hover:scale-105 active:scale-95"
+            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98]"
           >
             ⏭️ Next Frame
           </button>
@@ -43,11 +43,12 @@ export default function GameControls({
 
       {/* Answer Display */}
       {showingAnswer && correctAnswer && (
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-4 rounded-xl text-center">
+        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-xl text-center">
           <p className="text-sm text-white/80 mb-1">Correct Answer:</p>
-          <p className="text-2xl font-bold text-white">{correctAnswer}</p>
+          <p className="text-xl font-bold text-white">{correctAnswer}</p>
         </div>
       )}
     </div>
   )
 }
+

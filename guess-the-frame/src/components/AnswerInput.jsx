@@ -56,7 +56,7 @@ export default function AnswerInput({
           onChange={(e) => setAnswer(e.target.value)}
           disabled={disabled}
           placeholder={placeholder}
-          className={`w-full px-6 py-5 text-lg rounded-xl border-2 transition-all duration-300
+          className={`w-full px-5 py-3.5 text-base rounded-xl border-2 transition-all duration-300
             backdrop-blur-sm font-medium tracking-wide
             ${disabled 
               ? 'bg-black/30 border-gray-700/50 text-gray-500 cursor-not-allowed' 
@@ -73,10 +73,10 @@ export default function AnswerInput({
         <button
           type="submit"
           disabled={disabled || !answer.trim()}
-          className={`absolute right-2 top-1/2 -translate-y-1/2 px-8 py-2.5 rounded-lg font-bold transition-all duration-200
+          className={`absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2 rounded-lg text-sm font-bold transition-all duration-200
             ${disabled || !answer.trim()
               ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed scale-95'
-              : 'bg-gradient-to-r from-yellow-600 to-yellow-500 text-black hover:from-yellow-500 hover:to-yellow-400 active:scale-95 hover:scale-105 shadow-lg hover:shadow-yellow-500/50'
+              : 'bg-gradient-to-r from-yellow-600 to-yellow-500 text-black hover:from-yellow-500 hover:to-yellow-400 active:scale-[0.98] hover:scale-[1.02] shadow-lg hover:shadow-yellow-500/50'
             }`}
         >
           SUBMIT
@@ -86,7 +86,7 @@ export default function AnswerInput({
       {/* Result Feedback with Scale Animation */}
       {isCorrect === true && (
         <div className="mt-3 animate-scale-in">
-          <p className="text-green-400 font-bold flex items-center gap-2 text-lg bg-green-500/10 border border-green-500/30 rounded-lg px-4 py-2">
+          <p className="text-green-400 font-bold flex items-center gap-2 text-sm bg-green-500/10 border border-green-500/30 rounded-lg px-3 py-2">
             <CheckCircle className="w-6 h-6" />
             CORRECT! Brilliant guess!
           </p>
@@ -94,7 +94,7 @@ export default function AnswerInput({
       )}
       {isCorrect === false && (
         <div className="mt-3 animate-scale-in">
-          <p className="text-red-400 font-bold flex items-center gap-2 text-lg bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-2">
+          <p className="text-red-400 font-bold flex items-center gap-2 text-sm bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2">
             <XCircle className="w-6 h-6" />
             Not quite. Try again!
           </p>
@@ -103,3 +103,4 @@ export default function AnswerInput({
     </form>
   )
 }
+

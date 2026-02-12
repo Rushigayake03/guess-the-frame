@@ -18,7 +18,7 @@ export default function BlurredFrame({ imageUrl, isRevealed, movieTitle }) {
       </div>
 
       {/* Main Frame Container */}
-      <div className="relative w-full aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border-8 border-yellow-600/30">
+      <div className="relative w-full aspect-video max-h-[52vh] bg-black rounded-2xl overflow-hidden shadow-2xl border-4 lg:border-8 border-yellow-600/30">
         {/* Movie Frame Image */}
         <div className={`relative w-full h-full transition-all duration-1000 ease-out ${
           isRevealed ? 'blur-none scale-100' : 'blur-3xl scale-110'

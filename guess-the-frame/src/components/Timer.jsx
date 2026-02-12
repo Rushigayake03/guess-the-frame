@@ -64,9 +64,9 @@ export default function Timer({ duration = 20, onTimeUp, isActive, onTick }) {
     <div className="w-full">
       {/* Time Display */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-medium text-gray-400">Time Remaining</span>
+        <span className="text-xs font-medium text-gray-400">Time Remaining</span>
         <span 
-          className={`text-5xl font-bold tabular-nums transition-colors ${
+          className={`text-4xl font-bold tabular-nums transition-colors ${
             isCritical ? 'text-red-500 animate-pulse' : 
             isWarning ? 'text-orange-500' : 
             'text-white'
@@ -77,7 +77,7 @@ export default function Timer({ duration = 20, onTimeUp, isActive, onTick }) {
       </div>
       
       {/* Progress Bar */}
-      <div className="w-full bg-gray-800 rounded-full h-3 overflow-hidden shadow-inner">
+      <div className="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden shadow-inner">
         <div
           className={`h-full transition-all duration-1000 ease-linear ${
             isCritical ? 'bg-red-500' :

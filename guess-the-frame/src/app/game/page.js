@@ -85,13 +85,13 @@ function GameContent() {
           <div className="space-y-3">
             <button
               onClick={() => router.push('/admin/upload')}
-              className="block w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 uppercase tracking-wide"
+              className="block w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wide"
             >
               Upload Frames
             </button>
             <button
               onClick={() => router.push('/play')}
-              className="block w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 uppercase tracking-wide"
+              className="block w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wide"
             >
               Back to Lobby
             </button>
@@ -114,36 +114,36 @@ function GameContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
+    <div className="h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-600/5 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
       </div>
 
-      <div className="container mx-auto px-4 py-8 relative z-10">
+      <div className="container mx-auto h-full px-4 py-3 relative z-10 flex flex-col max-w-7xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8 animate-slide-in-down">
+        <div className="flex items-center justify-between mb-3 animate-slide-in-down shrink-0">
           <div className="flex items-center gap-4">
-            <Film className="w-12 h-12 text-yellow-400" />
+            <Film className="w-8 h-8 lg:w-10 lg:h-10 text-yellow-400" />
             <div>
-              <h1 className="text-4xl font-black text-yellow-400 uppercase tracking-wider drop-shadow-lg">
+              <h1 className="text-2xl lg:text-3xl font-black text-yellow-400 uppercase tracking-wider drop-shadow-lg">
                 Guess the Frame
               </h1>
-              <p className="text-gray-400 text-sm font-medium">Can you identify the movie?</p>
+              <p className="text-gray-400 text-xs lg:text-sm font-medium">Can you identify the movie?</p>
             </div>
           </div>
-          <div className="bg-black/40 backdrop-blur-md border-2 border-yellow-600/30 rounded-xl px-6 py-3">
-            <p className="text-yellow-400 text-sm font-bold uppercase tracking-wide">Frame</p>
-            <p className="text-white text-3xl font-black">{currentFrameIndex + 1}<span className="text-xl text-gray-400">/{totalFrames}</span></p>
+          <div className="bg-black/40 backdrop-blur-md border-2 border-yellow-600/30 rounded-xl px-4 py-2">
+            <p className="text-yellow-400 text-xs font-bold uppercase tracking-wide">Frame</p>
+            <p className="text-white text-2xl font-black">{currentFrameIndex + 1}<span className="text-base text-gray-400">/{totalFrames}</span></p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0">
           {/* Left Column - Game Area */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 min-h-0 flex flex-col gap-3">
             {/* Movie Frame */}
-            <div className="animate-slide-in-left">
+            <div className="animate-slide-in-left flex-1 min-h-0">
               <BlurredFrame
                 imageUrl={currentFrame.image_url}
                 isRevealed={isRevealed}
@@ -153,7 +153,7 @@ function GameContent() {
 
             {/* Timer (only show after reveal) */}
             {isRevealed && !showingAnswer && (
-              <div className="animate-slide-in-up">
+              <div className="animate-slide-in-up shrink-0">
                 <Timer
                   duration={20}
                   isActive={timerActive}
@@ -165,7 +165,7 @@ function GameContent() {
 
             {/* Answer Input (only show after reveal) */}
             {isRevealed && !showingAnswer && (
-              <div className="animate-slide-in-up" style={{animationDelay: '0.1s'}}>
+              <div className="animate-slide-in-up shrink-0" style={{animationDelay: '0.1s'}}>
                 <AnswerInput
                   onSubmit={onSubmitAnswer}
                   disabled={!timerActive}
@@ -175,7 +175,7 @@ function GameContent() {
             )}
 
             {/* Game Controls */}
-            <div className="animate-slide-in-up" style={{animationDelay: '0.2s'}}>
+            <div className="animate-slide-in-up shrink-0" style={{animationDelay: '0.2s'}}>
               <GameControls
                 onReveal={handleReveal}
                 onNext={handleNextFrame}
@@ -188,7 +188,7 @@ function GameContent() {
           </div>
 
           {/* Right Column - Scoreboard */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 min-h-0">
             <Scoreboard
               score={score}
               frameNumber={currentFrameIndex + 1}
@@ -224,3 +224,4 @@ export default function GamePage() {
     </Suspense>
   )
 }
+

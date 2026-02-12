@@ -459,7 +459,7 @@ export default function AdminUploadPage() {
           <button
             type="submit"
             disabled={loading || !tmdbId || !movieTitle || !movieYear || !imageFile}
-            className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-105 active:scale-95"
+            className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
           >
             {loading ? '⏳ Uploading...' : imageFile ? '✅ Upload Frame' : '⚠️ Select an Image First'}
           </button>

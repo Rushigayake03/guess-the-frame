@@ -35,7 +35,7 @@ export default function PlayPage() {
         {/* Back Button */}
         <Link 
           href="/"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-yellow-400 mb-8 transition-all duration-200 font-bold uppercase tracking-wide hover:scale-105 transform"
+          className="inline-flex items-center gap-2 text-gray-400 hover:text-yellow-400 mb-8 transition-all duration-200 font-bold uppercase tracking-wide hover:scale-[1.02] transform"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Lobby
@@ -61,7 +61,7 @@ export default function PlayPage() {
           {/* Hollywood */}
           <button
             onClick={() => startGame('hollywood')}
-            className="group relative inline-flex h-auto flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 p-8 font-medium text-white transition-all duration-300 ease-out hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/50 shadow-2xl border-4 border-blue-400/30 animate-slide-in-up"
+            className="group relative inline-flex h-auto flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 p-8 font-medium text-white transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/50 shadow-2xl border-4 border-blue-400/30 animate-slide-in-up"
           >
             <Film className="w-20 h-20 text-white mb-4 z-10 relative" />
             <h2 className="text-4xl font-black text-white mb-3 uppercase tracking-wide z-10 relative">Hollywood</h2>
@@ -88,7 +88,7 @@ export default function PlayPage() {
           {/* Bollywood */}
           <button
             onClick={() => startGame('bollywood')}
-            className="group relative inline-flex h-auto flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-orange-600 to-orange-800 p-8 font-medium text-white transition-all duration-300 ease-out hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/50 shadow-2xl border-4 border-orange-400/30 animate-slide-in-up"
+            className="group relative inline-flex h-auto flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-orange-600 to-orange-800 p-8 font-medium text-white transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-2xl hover:shadow-orange-500/50 shadow-2xl border-4 border-orange-400/30 animate-slide-in-up"
             style={{animationDelay: '0.1s'}}
           >
             <Drama className="w-20 h-20 text-white mb-4 z-10 relative" />
@@ -116,7 +116,7 @@ export default function PlayPage() {
           {/* Mixed */}
           <button
             onClick={() => startGame('mixed')}
-            className="group relative inline-flex h-auto flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-purple-600 to-purple-800 p-8 font-medium text-white transition-all duration-300 ease-out hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/50 shadow-2xl border-4 border-purple-400/30 animate-slide-in-up"
+            className="group relative inline-flex h-auto flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-purple-600 to-purple-800 p-8 font-medium text-white transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/50 shadow-2xl border-4 border-purple-400/30 animate-slide-in-up"
             style={{animationDelay: '0.2s'}}
           >
             <Globe className="w-20 h-20 text-white mb-4 z-10 relative" />
@@ -144,7 +144,7 @@ export default function PlayPage() {
 
         {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <div className="bg-black/40 backdrop-blur-md p-6 rounded-xl border-2 border-yellow-600/30 transition-all duration-300 ease-out hover:scale-105 hover:border-yellow-500/50 animate-fade-in" style={{animationDelay: '0.3s'}}>
+          <div className="bg-black/40 backdrop-blur-md p-6 rounded-xl border-2 border-yellow-600/30 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-yellow-500/50 animate-fade-in" style={{animationDelay: '0.3s'}}>
             <Zap className="w-12 h-12 text-yellow-400 mb-3" />
             <h3 className="text-yellow-400 font-black mb-2 text-xl uppercase tracking-wide">Speed Bonus</h3>
             <p className="text-gray-300 font-medium">
@@ -152,7 +152,7 @@ export default function PlayPage() {
             </p>
           </div>
 
-          <div className="bg-black/40 backdrop-blur-md p-6 rounded-xl border-2 border-blue-600/30 transition-all duration-300 ease-out hover:scale-105 hover:border-blue-500/50 animate-fade-in" style={{animationDelay: '0.4s'}}>
+          <div className="bg-black/40 backdrop-blur-md p-6 rounded-xl border-2 border-blue-600/30 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-blue-500/50 animate-fade-in" style={{animationDelay: '0.4s'}}>
             <Target className="w-12 h-12 text-blue-400 mb-3" />
             <h3 className="text-blue-400 font-black mb-2 text-xl uppercase tracking-wide">20 Frame Quest</h3>
             <p className="text-gray-300 font-medium">
@@ -160,7 +160,7 @@ export default function PlayPage() {
             </p>
           </div>
 
-          <div className="bg-black/40 backdrop-blur-md p-6 rounded-xl border-2 border-purple-600/30 transition-all duration-300 ease-out hover:scale-105 hover:border-purple-500/50 animate-fade-in" style={{animationDelay: '0.5s'}}>
+          <div className="bg-black/40 backdrop-blur-md p-6 rounded-xl border-2 border-purple-600/30 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-purple-500/50 animate-fade-in" style={{animationDelay: '0.5s'}}>
             <Trophy className="w-12 h-12 text-purple-400 mb-3" />
             <h3 className="text-purple-400 font-black mb-2 text-xl uppercase tracking-wide">High Score</h3>
             <p className="text-gray-300 font-medium">

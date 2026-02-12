@@ -37,7 +37,7 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               {/* Rule 1 */}
-              <div className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 border-2 border-blue-500/30 rounded-2xl p-6 transition-all duration-300 ease-out hover:scale-105 hover:border-blue-400/50">
+              <div className="bg-gradient-to-br from-blue-600/20 to-blue-800/20 border-2 border-blue-500/30 rounded-2xl p-6 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-blue-400/50">
                 <div className="flex items-start gap-4">
                   <div className="bg-blue-600 rounded-full p-3 flex-shrink-0">
                     <Film className="w-8 h-8 text-white" />
@@ -52,7 +52,7 @@ export default function Home() {
               </div>
 
               {/* Rule 2 */}
-              <div className="bg-gradient-to-br from-purple-600/20 to-purple-800/20 border-2 border-purple-500/30 rounded-2xl p-6 transition-all duration-300 ease-out hover:scale-105 hover:border-purple-400/50">
+              <div className="bg-gradient-to-br from-purple-600/20 to-purple-800/20 border-2 border-purple-500/30 rounded-2xl p-6 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-purple-400/50">
                 <div className="flex items-start gap-4">
                   <div className="bg-purple-600 rounded-full p-3 flex-shrink-0">
                     <Target className="w-8 h-8 text-white" />
@@ -67,7 +67,7 @@ export default function Home() {
               </div>
 
               {/* Rule 3 */}
-              <div className="bg-gradient-to-br from-orange-600/20 to-orange-800/20 border-2 border-orange-500/30 rounded-2xl p-6 transition-all duration-300 ease-out hover:scale-105 hover:border-orange-400/50">
+              <div className="bg-gradient-to-br from-orange-600/20 to-orange-800/20 border-2 border-orange-500/30 rounded-2xl p-6 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-orange-400/50">
                 <div className="flex items-start gap-4">
                   <div className="bg-orange-600 rounded-full p-3 flex-shrink-0">
                     <Clock className="w-8 h-8 text-white" />
@@ -82,7 +82,7 @@ export default function Home() {
               </div>
 
               {/* Rule 4 */}
-              <div className="bg-gradient-to-br from-green-600/20 to-green-800/20 border-2 border-green-500/30 rounded-2xl p-6 transition-all duration-300 ease-out hover:scale-105 hover:border-green-400/50">
+              <div className="bg-gradient-to-br from-green-600/20 to-green-800/20 border-2 border-green-500/30 rounded-2xl p-6 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-green-400/50">
                 <div className="flex items-start gap-4">
                   <div className="bg-green-600 rounded-full p-3 flex-shrink-0">
                     <Star className="w-8 h-8 text-white" />
@@ -124,7 +124,7 @@ export default function Home() {
 
         {/* Features Grid */}
         <div className="max-w-5xl mx-auto mb-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-black/40 backdrop-blur-md border-2 border-yellow-600/30 rounded-2xl p-6 text-center transition-all duration-300 ease-out hover:scale-105 hover:border-yellow-500/50 animate-fade-in" style={{animationDelay: '0.1s'}}>
+          <div className="bg-black/40 backdrop-blur-md border-2 border-yellow-600/30 rounded-2xl p-6 text-center transition-all duration-300 ease-out hover:scale-[1.02] hover:border-yellow-500/50 animate-fade-in" style={{animationDelay: '0.1s'}}>
             <Zap className="w-12 h-12 text-yellow-400 mx-auto mb-3" />
             <h3 className="text-xl font-black text-yellow-400 mb-2 uppercase">Lightning Fast</h3>
             <p className="text-gray-300 font-medium">
@@ -132,7 +132,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="bg-black/40 backdrop-blur-md border-2 border-blue-600/30 rounded-2xl p-6 text-center transition-all duration-300 ease-out hover:scale-105 hover:border-blue-500/50 animate-fade-in" style={{animationDelay: '0.2s'}}>
+          <div className="bg-black/40 backdrop-blur-md border-2 border-blue-600/30 rounded-2xl p-6 text-center transition-all duration-300 ease-out hover:scale-[1.02] hover:border-blue-500/50 animate-fade-in" style={{animationDelay: '0.2s'}}>
             <Film className="w-12 h-12 text-blue-400 mx-auto mb-3" />
             <h3 className="text-xl font-black text-blue-400 mb-2 uppercase">Multiple Modes</h3>
             <p className="text-gray-300 font-medium">
@@ -140,7 +140,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="bg-black/40 backdrop-blur-md border-2 border-purple-600/30 rounded-2xl p-6 text-center transition-all duration-300 ease-out hover:scale-105 hover:border-purple-500/50 animate-fade-in" style={{animationDelay: '0.3s'}}>
+          <div className="bg-black/40 backdrop-blur-md border-2 border-purple-600/30 rounded-2xl p-6 text-center transition-all duration-300 ease-out hover:scale-[1.02] hover:border-purple-500/50 animate-fade-in" style={{animationDelay: '0.3s'}}>
             <Trophy className="w-12 h-12 text-purple-400 mx-auto mb-3" />
             <h3 className="text-xl font-black text-purple-400 mb-2 uppercase">Compete & Win</h3>
             <p className="text-gray-300 font-medium">
@@ -153,7 +153,7 @@ export default function Home() {
         <div className="max-w-2xl mx-auto animate-scale-in">
           <Link 
             href="/play"
-            className="group relative inline-flex h-20 w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-r from-yellow-600 to-orange-500 px-8 text-3xl font-black text-black transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-105 hover:shadow-2xl hover:shadow-yellow-500/50">
+            className="group relative inline-flex h-20 w-full items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-r from-yellow-600 to-orange-500 px-8 text-3xl font-black text-black transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] hover:scale-[1.02] hover:shadow-2xl hover:shadow-yellow-500/50">
             <span className="uppercase tracking-wider">Start Playing Now</span>
             <div className="w-0 translate-x-[100%] pl-0 opacity-0 transition-all duration-200 group-hover:w-8 group-hover:translate-x-0 group-hover:pl-2 group-hover:opacity-100">
               <ArrowRight className="h-8 w-8" />
