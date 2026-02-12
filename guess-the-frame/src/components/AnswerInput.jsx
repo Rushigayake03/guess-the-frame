@@ -1,6 +1,7 @@
 // components/AnswerInput.jsx
 'use client'
 import { useState, useEffect } from 'react'
+import { CheckCircle, XCircle } from 'lucide-react'
 
 export default function AnswerInput({ 
   onSubmit, 
@@ -86,14 +87,16 @@ export default function AnswerInput({
       {isCorrect === true && (
         <div className="mt-3 animate-scale-in">
           <p className="text-green-400 font-bold flex items-center gap-2 text-lg bg-green-500/10 border border-green-500/30 rounded-lg px-4 py-2">
-            <span className="text-2xl">✓</span> CORRECT! Brilliant guess!
+            <CheckCircle className="w-6 h-6" />
+            CORRECT! Brilliant guess!
           </p>
         </div>
       )}
       {isCorrect === false && (
         <div className="mt-3 animate-scale-in">
           <p className="text-red-400 font-bold flex items-center gap-2 text-lg bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-2">
-            <span className="text-2xl">✗</span> Not quite. Try again!
+            <XCircle className="w-6 h-6" />
+            Not quite. Try again!
           </p>
         </div>
       )}

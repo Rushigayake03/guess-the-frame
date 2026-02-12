@@ -1,6 +1,7 @@
 // components/ScorePopup.jsx
 'use client'
 import { useEffect, useState } from 'react'
+import { Star, Sparkles, Award } from 'lucide-react'
 
 export default function ScorePopup({ points, show, onComplete }) {
   const [visible, setVisible] = useState(false)
@@ -42,9 +43,9 @@ export default function ScorePopup({ points, show, onComplete }) {
   }
 
   const getMessage = () => {
-    if (points >= 15) return '🎬 BLOCKBUSTER!'
-    if (points >= 12) return '⭐ OUTSTANDING!'
-    return '🎯 WELL DONE!'
+    if (points >= 15) return { text: 'BLOCKBUSTER!', Icon: Award }
+    if (points >= 12) return { text: 'OUTSTANDING!', Icon: Star }
+    return { text: 'WELL DONE!', Icon: Sparkles }
   }
 
   const getGlow = () => {
@@ -52,6 +53,8 @@ export default function ScorePopup({ points, show, onComplete }) {
     if (points >= 12) return 'shadow-blue-500/50'
     return 'shadow-green-500/50'
   }
+
+  const { text, Icon } = getMessage()
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
@@ -71,9 +74,13 @@ export default function ScorePopup({ points, show, onComplete }) {
 
       {/* Score Display with Scale Animation */}
       <div className={`bg-gradient-to-br ${getColor()} text-white px-16 py-10 rounded-3xl shadow-2xl ${getGlow()} animate-scale-pop border-4 border-white/30`}>
-        <p className="text-3xl font-black mb-3 text-center tracking-wider animate-pulse">
-          {getMessage()}
-        </p>
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <Icon className="w-10 h-10 animate-pulse" />
+          <p className="text-3xl font-black text-center tracking-wider">
+            {text}
+          </p>
+          <Icon className="w-10 h-10 animate-pulse" />
+        </div>
         <p className="text-8xl font-black text-center drop-shadow-2xl animate-bounce-once">
           +{points}
         </p>

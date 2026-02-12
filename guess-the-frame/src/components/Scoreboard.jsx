@@ -1,5 +1,6 @@
 // components/Scoreboard.jsx
 'use client'
+import { Film, Trophy, Target, TrendingUp, Flame, Zap, Star } from 'lucide-react'
 
 export default function Scoreboard({ 
   score = 0, 
@@ -19,51 +20,66 @@ export default function Scoreboard({
     }
   }
 
-  const getModeEmoji = () => {
+  const getModeIcon = () => {
     switch(gameMode) {
-      case 'hollywood': return '🎬'
-      case 'bollywood': return '🎭'
-      case 'mixed': return '🌍'
-      default: return '🎮'
+      case 'hollywood': return Film
+      case 'bollywood': return Film
+      case 'mixed': return Film
+      default: return Film
     }
   }
+
+  const ModeIcon = getModeIcon()
 
   return (
     <div className="w-full bg-black/40 backdrop-blur-md rounded-2xl p-6 shadow-2xl border-2 border-yellow-600/30 animate-slide-in-right">
       {/* Header with Film Reel Icon */}
       <div className="flex items-center justify-between mb-6 pb-4 border-b-2 border-yellow-600/30">
         <div className="flex items-center gap-3">
-          <div className="text-3xl">🎞️</div>
+          <Trophy className="w-8 h-8 text-yellow-400" />
           <h2 className="text-2xl font-black text-yellow-400 uppercase tracking-wider">Stats</h2>
         </div>
-        <span className={`px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r ${getModeColor()} shadow-lg transform hover:scale-105 transition-transform`}>
-          {getModeEmoji()} {gameMode.charAt(0).toUpperCase() + gameMode.slice(1)}
+        <span className={`px-4 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r ${getModeColor()} shadow-lg transform hover:scale-105 transition-transform flex items-center gap-2`}>
+          <ModeIcon className="w-4 h-4" />
+          {gameMode.charAt(0).toUpperCase() + gameMode.slice(1)}
         </span>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-4 mb-6">
         {/* Score */}
-        <div className="bg-gradient-to-br from-yellow-600 to-yellow-700 p-5 rounded-xl text-center shadow-lg border-2 border-yellow-500/50 transform hover:scale-105 transition-all duration-200">
-          <p className="text-sm text-yellow-100 mb-2 font-bold uppercase tracking-wide">Score</p>
+        <div className="bg-gradient-to-br from-yellow-600 to-yellow-700 p-5 rounded-xl text-center shadow-lg border-2 border-yellow-500/50 transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Trophy className="w-5 h-5 text-yellow-100" />
+            <p className="text-sm text-yellow-100 font-bold uppercase tracking-wide">Score</p>
+          </div>
           <p className="text-5xl font-black text-white drop-shadow-lg">{score}</p>
         </div>
 
         {/* Progress */}
-        <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-5 rounded-xl text-center shadow-lg border-2 border-blue-500/50 transform hover:scale-105 transition-all duration-200">
-          <p className="text-sm text-blue-100 mb-2 font-bold uppercase tracking-wide">Progress</p>
+        <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-5 rounded-xl text-center shadow-lg border-2 border-blue-500/50 transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Film className="w-5 h-5 text-blue-100" />
+            <p className="text-sm text-blue-100 font-bold uppercase tracking-wide">Progress</p>
+          </div>
           <p className="text-5xl font-black text-white drop-shadow-lg">{frameNumber}<span className="text-2xl text-blue-200">/{totalFrames}</span></p>
         </div>
 
         {/* Correct Answers */}
-        <div className="bg-gradient-to-br from-green-600 to-green-700 p-5 rounded-xl text-center shadow-lg border-2 border-green-500/50 transform hover:scale-105 transition-all duration-200">
-          <p className="text-sm text-green-100 mb-2 font-bold uppercase tracking-wide">Correct</p>
+        <div className="bg-gradient-to-br from-green-600 to-green-700 p-5 rounded-xl text-center shadow-lg border-2 border-green-500/50 transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Target className="w-5 h-5 text-green-100" />
+            <p className="text-sm text-green-100 font-bold uppercase tracking-wide">Correct</p>
+          </div>
           <p className="text-5xl font-black text-white drop-shadow-lg">{correctAnswers}</p>
         </div>
 
         {/* Accuracy */}
-        <div className="bg-gradient-to-br from-purple-600 to-purple-700 p-5 rounded-xl text-center shadow-lg border-2 border-purple-500/50 transform hover:scale-105 transition-all duration-200">
-          <p className="text-sm text-purple-100 mb-2 font-bold uppercase tracking-wide">Accuracy</p>
+        <div className="bg-gradient-to-br from-purple-600 to-purple-700 p-5 rounded-xl text-center shadow-lg border-2 border-purple-500/50 transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <TrendingUp className="w-5 h-5 text-purple-100" />
+            <p className="text-sm text-purple-100 font-bold uppercase tracking-wide">Accuracy</p>
+          </div>
           <p className="text-5xl font-black text-white drop-shadow-lg">{accuracy}<span className="text-2xl text-purple-200">%</span></p>
         </div>
       </div>
@@ -84,9 +100,22 @@ export default function Scoreboard({
 
       {/* Motivational Text */}
       <div className="mt-6 text-center">
-        <p className="text-yellow-400/70 text-sm font-medium italic">
-          {accuracy >= 80 ? "🌟 You're on fire!" : accuracy >= 60 ? "⚡ Great performance!" : "🎬 Keep guessing!"}
-        </p>
+        {accuracy >= 80 ? (
+          <p className="text-yellow-400/70 text-sm font-medium italic flex items-center justify-center gap-2">
+            <Flame className="w-4 h-4" />
+            You're on fire!
+          </p>
+        ) : accuracy >= 60 ? (
+          <p className="text-yellow-400/70 text-sm font-medium italic flex items-center justify-center gap-2">
+            <Zap className="w-4 h-4" />
+            Great performance!
+          </p>
+        ) : (
+          <p className="text-yellow-400/70 text-sm font-medium italic flex items-center justify-center gap-2">
+            <Star className="w-4 h-4" />
+            Keep guessing!
+          </p>
+        )}
       </div>
     </div>
   )

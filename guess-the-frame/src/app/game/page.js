@@ -3,6 +3,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { Film, Loader2, AlertCircle } from 'lucide-react'
 import Timer from '@/components/Timer'
 import BlurredFrame from '@/components/BlurredFrame'
 import AnswerInput from '@/components/AnswerInput'
@@ -40,7 +41,7 @@ function GameContent() {
     handleNextFrame,
     handleShowAnswer,
     setElapsedTime,
-  } = useGameSession(gameMode, null)
+  } = useGameSession(gameMode, null) // null = no specific pack, use game mode
 
   // Handle answer submission with popup
   const onSubmitAnswer = async (userAnswer) => {
@@ -64,8 +65,7 @@ function GameContent() {
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
         <div className="text-center">
           <div className="relative">
-            <div className="animate-spin rounded-full h-24 w-24 border-t-4 border-b-4 border-yellow-500 mx-auto mb-6"></div>
-            <div className="absolute inset-0 flex items-center justify-center text-4xl">🎬</div>
+            <Loader2 className="w-24 h-24 text-yellow-500 mx-auto mb-6 animate-spin" />
           </div>
           <p className="text-yellow-400 text-2xl font-bold uppercase tracking-wider">Loading Cinema...</p>
           <p className="text-gray-400 text-sm mt-2">Preparing your frames</p>
@@ -79,7 +79,7 @@ function GameContent() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center p-8">
         <div className="max-w-md bg-red-500/10 border-2 border-red-500 rounded-2xl p-8 text-center backdrop-blur-md">
-          <div className="text-6xl mb-4">🎞️</div>
+          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
           <h2 className="text-3xl font-black text-red-400 mb-4 uppercase">Film Reel Error</h2>
           <p className="text-red-300 mb-6 font-medium">{error}</p>
           <div className="space-y-3">
@@ -105,7 +105,10 @@ function GameContent() {
   if (!currentFrame) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
-        <p className="text-yellow-400 text-2xl font-bold">🎬 No frames available</p>
+        <div className="text-center">
+          <Film className="w-16 h-16 text-yellow-400 mx-auto mb-4" />
+          <p className="text-yellow-400 text-2xl font-bold">No frames available</p>
+        </div>
       </div>
     )
   }
@@ -122,7 +125,7 @@ function GameContent() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8 animate-slide-in-down">
           <div className="flex items-center gap-4">
-            <div className="text-5xl">🎬</div>
+            <Film className="w-12 h-12 text-yellow-400" />
             <div>
               <h1 className="text-4xl font-black text-yellow-400 uppercase tracking-wider drop-shadow-lg">
                 Guess the Frame
@@ -211,7 +214,10 @@ export default function GamePage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center">
-        <div className="text-yellow-400 text-3xl font-bold">🎬 Loading...</div>
+        <div className="flex items-center gap-3">
+          <Film className="w-8 h-8 text-yellow-400" />
+          <div className="text-yellow-400 text-3xl font-bold">Loading...</div>
+        </div>
       </div>
     }>
       <GameContent />

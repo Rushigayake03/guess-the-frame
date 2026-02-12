@@ -218,3 +218,20 @@
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 200ms;
 }
+
+/* Smooth Hover Scale Transitions */
+button,
+a,
+.hover\:scale-105:hover,
+.hover\:scale-110:hover {
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1), 
+              background-color 300ms ease,
+              border-color 300ms ease,
+              box-shadow 300ms ease,
+              opacity 300ms ease;
+}
+
+/* Smooth transform for all hover effects */
+.transform {
+  transition: transform 800ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}

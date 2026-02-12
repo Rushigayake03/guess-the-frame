@@ -1,6 +1,7 @@
 // components/BlurredFrame.jsx
 'use client'
 import { useState } from 'react'
+import { Film, Loader2 } from 'lucide-react'
 
 export default function BlurredFrame({ imageUrl, isRevealed, movieTitle }) {
   const [imageLoaded, setImageLoaded] = useState(false)
@@ -31,7 +32,10 @@ export default function BlurredFrame({ imageUrl, isRevealed, movieTitle }) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black">
-              <p className="text-gray-600 text-2xl font-bold">🎬 No frame available</p>
+              <div className="text-center">
+                <Film className="w-16 h-16 text-gray-600 mx-auto mb-2" />
+                <p className="text-gray-600 text-2xl font-bold">No frame available</p>
+              </div>
             </div>
           )}
         </div>
@@ -40,7 +44,7 @@ export default function BlurredFrame({ imageUrl, isRevealed, movieTitle }) {
         {!imageLoaded && imageUrl && (
           <div className="absolute inset-0 flex items-center justify-center bg-black">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-yellow-500 mx-auto mb-4"></div>
+              <Loader2 className="w-20 h-20 text-yellow-500 mx-auto mb-4 animate-spin" />
               <p className="text-yellow-500 text-xl font-bold">Loading Frame...</p>
             </div>
           </div>
@@ -50,7 +54,7 @@ export default function BlurredFrame({ imageUrl, isRevealed, movieTitle }) {
         {!isRevealed && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in">
             <div className="text-center px-8 py-6 bg-black/50 rounded-2xl border-2 border-yellow-500/50 backdrop-blur-md">
-              <div className="text-6xl mb-4 animate-bounce">🎬</div>
+              <Film className="w-16 h-16 text-yellow-400 mx-auto mb-4 animate-bounce" />
               <p className="text-yellow-400 text-3xl font-black mb-2 uppercase tracking-wider">Frame Hidden</p>
               <p className="text-gray-300 text-lg font-medium">Click "REVEAL" to see the scene</p>
             </div>
