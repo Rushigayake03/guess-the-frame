@@ -2,14 +2,303 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #3b82f6;
-  --color-secondary: #8b5cf6;
+  --color-primary: #d47e30;
+  --color-secondary: #8d5a2b;
   --font-sans: 'Inter', system-ui, sans-serif;
+
+  /* Spiced Chai palette */
+  --color-black: #2e2518;
+
+  --color-gray-50: #fffef4;
+  --color-gray-100: #fdfbd4;
+  --color-gray-200: #f2ebc0;
+  --color-gray-300: #b8a081;
+  --color-gray-400: #9f8665;
+  --color-gray-500: #876f4f;
+  --color-gray-600: #705a40;
+  --color-gray-700: #5b4933;
+  --color-gray-800: #483928;
+  --color-gray-900: #362b1d;
+  --color-gray-950: #2a2116;
+
+  --color-yellow-400: #e5b16a;
+  --color-yellow-500: #db9a4a;
+  --color-yellow-600: #d47e30;
+  --color-yellow-700: #bb6c28;
+
+  --color-orange-400: #e2a05a;
+  --color-orange-500: #d47e30;
+  --color-orange-600: #c06f2a;
+  --color-orange-700: #a95f25;
+  --color-orange-800: #924f21;
+
+  --color-blue-400: #df9a56;
+  --color-blue-500: #d47e30;
+  --color-blue-600: #bf6e29;
+  --color-blue-700: #aa6024;
+  --color-blue-800: #935220;
+
+  --color-purple-400: #c1884f;
+  --color-purple-500: #a66d3c;
+  --color-purple-600: #8d5a2b;
+  --color-purple-700: #784b26;
+  --color-purple-800: #654022;
+
+  --color-green-400: #bf944f;
+  --color-green-500: #a77c42;
+  --color-green-600: #8d5a2b;
+  --color-green-700: #7a4d27;
+  --color-green-800: #684223;
+
+  --color-red-400: #bf7557;
+  --color-red-500: #ab6649;
+  --color-red-600: #96573b;
+  --color-red-700: #804a32;
 }
 
-/* Custom utilities */
+@layer base {
+  html,
+  body {
+    background-color: #fdfbd4;
+    color: #2e2518;
+  }
+}
+
+/* Custom Keyframe Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+@keyframes scale-in {
+  0% { 
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-pop {
+  0% { 
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.1);
+  }
+  100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce-once {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes particle {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+      calc(cos(var(--angle)) * 150px),
+      calc(sin(var(--angle)) * 150px)
+    ) scale(0);
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-down {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-up {
+  0% {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-left {
+  0% {
+    transform: translateX(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Animation Classes */
 @layer utilities {
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out;
+  }
+
+  .animate-scale-pop {
+    animation: scale-pop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .animate-bounce-once {
+    animation: bounce-once 1s ease-in-out;
+  }
+
+  .animate-particle {
+    animation: particle 1s ease-out forwards;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+
+  .animate-slide-in-down {
+    animation: slide-in-down 0.6s ease-out;
+  }
+
+  .animate-slide-in-up {
+    animation: slide-in-up 0.6s ease-out;
+  }
+
+  .animate-slide-in-left {
+    animation: slide-in-left 0.6s ease-out;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.6s ease-out;
+  }
+
+  .animate-ping-slow {
+    animation: ping-slow 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  /* Gradient Utilities */
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+
+  /* Text Balance */
   .text-balance {
     text-wrap: balance;
   }
+
+  /* Cinematic Text Shadow */
+  .drop-shadow-cinematic {
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.8));
+  }
 }
+
+/* Custom Scrollbar for Cinematic Feel */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #eab308, #f59e0b);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #f59e0b, #eab308);
+}
+
+/* Selection Color */
+::selection {
+  background: rgba(234, 179, 8, 0.3);
+  color: white;
+}
+
+/* Smooth Transitions for All Interactive Elements */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Smooth Hover Scale Transitions */
+button,
+a,
+.hover\:scale-105:hover,
+.hover\:scale-110:hover {
+  transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1), 
+              background-color 300ms ease,
+              border-color 300ms ease,
+              box-shadow 300ms ease,
+              opacity 300ms ease;
+}
+
+/* Smooth transform for all hover effects */
+.transform {
+  transition: transform 800ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* Disable page entry animations without affecting loaders/spinners */
+.animate-fade-in,
+.animate-slide-in-down,
+.animate-slide-in-up,
+.animate-slide-in-left,
+.animate-slide-in-right,
+.animate-scale-in {
+  animation: none !important;
+}
+

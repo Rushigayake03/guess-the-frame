@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase'
 import { checkAnswer } from '@/lib/answer-matching'
 import { calculateScore } from '@/lib/utils'
 
-export function useGameSession(gameMode = 'mixed' , packId = null) {
+export function useGameSession(gameMode = 'mixed', packId = null) {
   const [frames, setFrames] = useState([])
   const [currentFrameIndex, setCurrentFrameIndex] = useState(0)
   const [score, setScore] = useState(0)
@@ -23,14 +23,14 @@ export function useGameSession(gameMode = 'mixed' , packId = null) {
   // Fetch frames from Supabase on mount
   useEffect(() => {
     fetchFrames()
-  }, [gameMode , packId])
+  }, [gameMode, packId])
 
   const fetchFrames = async () => {
     setLoading(true)
     setError(null)
 
     try {
-      console.log('Fetching frames for mode:', gameMode , 'pack:', packId)
+      console.log('Fetching frames for mode:', gameMode, 'pack:', packId)
 
       // Build query - use !inner to ensure movies exist
       let query = supabase
@@ -54,12 +54,15 @@ export function useGameSession(gameMode = 'mixed' , packId = null) {
       if (packId) {
         query = query.eq('pack_id', packId)
       } else {
-        // Otherwise filter by genre
+        // Otherwise filter by genre in the movies table
         if (gameMode === 'hollywood') {
-          query = query.eq('movies.genre', 'hollywood')
+          // Filter movies where genre is 'hollywood' or 'both'
+          query = query.or('genre.eq.hollywood,genre.eq.both', { foreignTable: 'movies' })
         } else if (gameMode === 'bollywood') {
-          query = query.eq('movies.genre', 'bollywood')
+          // Filter movies where genre is 'bollywood' or 'both'
+          query = query.or('genre.eq.bollywood,genre.eq.both', { foreignTable: 'movies' })
         }
+        // If 'mixed', no genre filter needed
       }
 
       const { data, error: fetchError } = await query

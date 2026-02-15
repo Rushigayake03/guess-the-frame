@@ -6,16 +6,16 @@ import AdminHeader from '@/components/AdminHeader'
 export default function AdminDashboard() {
   return (
     <AdminAuthGuard>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-8">
+      <div className="min-h-screen bg-[#FDFBD4] p-8">
         <div className="max-w-6xl mx-auto">
           <AdminHeader />
           
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-5xl font-bold text-white mb-4">
+            <h1 className="text-5xl font-bold text-gray-900 mb-4">
               🔧 Admin Panel
             </h1>
-            <p className="text-gray-300 text-lg">
+            <p className="text-gray-700 text-lg">
               Manage your movie frames and collections
             </p>
           </div>
@@ -25,7 +25,7 @@ export default function AdminDashboard() {
             {/* Upload Frames */}
             <Link
               href="/admin/upload"
-              className="relative bg-gradient-to-br from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 p-8 rounded-2xl transition-all transform hover:scale-105 shadow-2xl group"
+              className="relative bg-gradient-to-br from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 p-8 rounded-2xl transition-all transform hover:scale-[1.02] shadow-2xl group"
             >
               <div className="text-6xl mb-4">📤</div>
               <h2 className="text-2xl font-bold text-white mb-3">Upload Frames</h2>
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
             {/* Manage Frames */}
             <Link
               href="/admin/frames"
-              className="relative bg-gradient-to-br from-purple-600 to-purple-800 hover:from-purple-500 hover:to-purple-700 p-8 rounded-2xl transition-all transform hover:scale-105 shadow-2xl group"
+              className="relative bg-gradient-to-br from-purple-600 to-purple-800 hover:from-purple-500 hover:to-purple-700 p-8 rounded-2xl transition-all transform hover:scale-[1.02] shadow-2xl group"
             >
               <div className="text-6xl mb-4">🎬</div>
               <h2 className="text-2xl font-bold text-white mb-3">Manage Frames</h2>
@@ -51,7 +51,7 @@ export default function AdminDashboard() {
             {/* Manage Packs */}
             <Link
               href="/admin/packs"
-              className="relative bg-gradient-to-br from-green-600 to-green-800 hover:from-green-500 hover:to-green-700 p-8 rounded-2xl transition-all transform hover:scale-105 shadow-2xl group"
+              className="relative bg-gradient-to-br from-green-600 to-green-800 hover:from-green-500 hover:to-green-700 p-8 rounded-2xl transition-all transform hover:scale-[1.02] shadow-2xl group"
             >
               <div className="text-6xl mb-4">📦</div>
               <h2 className="text-2xl font-bold text-white mb-3">Manage Packs</h2>
@@ -109,3 +109,4 @@ export default function AdminDashboard() {
     </AdminAuthGuard>
   )
 }
+

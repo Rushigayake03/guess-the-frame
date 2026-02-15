@@ -46,14 +46,14 @@ function ResultsContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
+    <div className="min-h-screen bg-[#FDFBD4]">
       <div className="container mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-6xl font-bold text-white mb-4">
+          <h1 className="text-6xl font-bold text-gray-900 mb-4">
             Game Complete! {gradeInfo.emoji}
           </h1>
-          <p className="text-xl text-gray-300">
+          <p className="text-xl text-gray-700">
             Here's how you did
           </p>
         </div>
@@ -97,14 +97,14 @@ function ResultsContent() {
         <div className="max-w-2xl mx-auto space-y-4">
           <button
             onClick={() => router.push(`/game?mode=${mode}`)}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-[1.02]"
           >
             🔄 Play Again
           </button>
 
           <button
             onClick={shareResults}
-            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-[1.02]"
           >
             📱 Share Results
           </button>
@@ -131,11 +131,12 @@ function ResultsContent() {
 export default function ResultsPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center">
-        <div className="text-white text-2xl">Loading results...</div>
+      <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center">
+        <div className="text-gray-900 text-2xl">Loading results...</div>
       </div>
     }>
       <ResultsContent />
     </Suspense>
   )
 }
+

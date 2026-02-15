@@ -3,28 +3,24 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { Film, Loader2, AlertCircle } from 'lucide-react'
 import Timer from '@/components/Timer'
 import BlurredFrame from '@/components/BlurredFrame'
 import AnswerInput from '@/components/AnswerInput'
 import GameControls from '@/components/GameControls'
 import Scoreboard from '@/components/Scoreboard'
 import ScorePopup from '@/components/ScorePopup'
-//import { checkAnswer } from '@/lib/answer-matching'
-//import { calculateScore } from '@/lib/utils'
 import { useGameSession } from '@/hooks/useGameSession'
-//import { supabase } from '../lib/supabase'
 import { supabase } from '@/lib/supabase'
 
 function GameContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const gameMode = searchParams.get('mode') || 'mixed'
-  const packId = searchParams.get('pack') || null 
 
   const [showScorePopup, setShowScorePopup] = useState(false)
   const [earnedPoints, setEarnedPoints] = useState(0)
 
-  // USE THE HOOK - only pass gameMode
   const {
     currentFrame,
     currentFrameIndex,
@@ -45,7 +41,7 @@ function GameContent() {
     handleNextFrame,
     handleShowAnswer,
     setElapsedTime,
-  } = useGameSession(gameMode, packId)
+  } = useGameSession(gameMode, null) // null = no specific pack, use game mode
 
   // Handle answer submission with popup
   const onSubmitAnswer = async (userAnswer) => {
@@ -61,15 +57,18 @@ function GameContent() {
     if (gameComplete) {
       router.push(`/results?score=${score}&correct=${correctAnswers}&total=${totalFrames}&mode=${gameMode}`)
     }
-  }, [gameComplete, score, correctAnswers, totalFrames, gameMode, packId, router])
+  }, [gameComplete, score, correctAnswers, totalFrames, gameMode, router])
 
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-white text-xl">Loading game...</p>
+          <div className="relative">
+            <Loader2 className="w-24 h-24 text-yellow-500 mx-auto mb-6 animate-spin" />
+          </div>
+          <p className="text-[#8D5A2B] text-2xl font-bold uppercase tracking-wider">Loading Cinema...</p>
+          <p className="text-gray-700 text-sm mt-2">Preparing your frames</p>
         </div>
       </div>
     )
@@ -78,23 +77,23 @@ function GameContent() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center p-8">
-        <div className="max-w-md bg-red-500/20 border border-red-500 rounded-2xl p-8 text-center">
-          <div className="text-6xl mb-4">❌</div>
-          <h2 className="text-2xl font-bold text-white mb-4">Error Loading Game</h2>
-          <p className="text-red-300 mb-6">{error}</p>
+      <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center p-8">
+        <div className="max-w-md bg-red-500/10 border-2 border-red-500 rounded-2xl p-8 text-center backdrop-blur-md">
+          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+          <h2 className="text-3xl font-black text-red-400 mb-4 uppercase">Film Reel Error</h2>
+          <p className="text-red-300 mb-6 font-medium">{error}</p>
           <div className="space-y-3">
             <button
               onClick={() => router.push('/admin/upload')}
-              className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition"
+              className="block w-full bg-yellow-600 hover:bg-yellow-500 text-black font-bold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wide"
             >
               Upload Frames
             </button>
             <button
               onClick={() => router.push('/play')}
-              className="block w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition"
+              className="block w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] uppercase tracking-wide"
             >
-              Back to Game Modes
+              Back to Lobby
             </button>
           </div>
         </div>
@@ -102,78 +101,94 @@ function GameContent() {
     )
   }
 
-  // No frames available
+  // No current frame
   if (!currentFrame) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center">
         <div className="text-center">
-          <p className="text-white text-xl mb-4">No frames available</p>
-          <button
-            onClick={() => router.push('/admin/upload')}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition"
-          >
-            Upload Frames
-          </button>
+          <Film className="w-16 h-16 text-[#8D5A2B] mx-auto mb-4" />
+          <p className="text-[#8D5A2B] text-2xl font-bold">No frames available</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black">
-      <div className="container mx-auto px-4 py-8">
+    <div className="h-screen bg-[#FDFBD4] relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-600/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+      </div>
+
+      <div className="container mx-auto h-full px-4 py-3 relative z-10 flex flex-col max-w-7xl">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold text-white">
-            🎬 Guess the Frame
-          </h1>
-          <div className="text-white/60 text-lg">
-            Frame {currentFrameIndex + 1} / {totalFrames}
+        <div className="flex items-center justify-between mb-3 animate-slide-in-down shrink-0">
+          <div className="flex items-center gap-4">
+            <Film className="w-8 h-8 lg:w-10 lg:h-10 text-[#8D5A2B]" />
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-black text-[#8D5A2B] uppercase tracking-wider drop-shadow-lg">
+                Guess the Frame
+              </h1>
+              <p className="text-gray-700 text-xs lg:text-sm font-medium">Can you identify the movie?</p>
+            </div>
+          </div>
+          <div className="bg-[#b8ac8f]/95 backdrop-blur-md border-2 border-[#9b7648]/45 rounded-xl px-4 py-2">
+            <p className="text-[#8D5A2B] text-xs font-bold uppercase tracking-wide">Frame</p>
+            <p className="text-gray-900 text-2xl font-black">{currentFrameIndex + 1}<span className="text-base text-gray-700">/{totalFrames}</span></p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0">
           {/* Left Column - Game Area */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 min-h-0 flex flex-col gap-3">
             {/* Movie Frame */}
-            <BlurredFrame
-              imageUrl={currentFrame.image_url}
-              isRevealed={isRevealed}
-              movieTitle={currentFrame.movies?.title || 'Unknown'}
-            />
+            <div className="animate-slide-in-left flex-1 min-h-0">
+              <BlurredFrame
+                imageUrl={currentFrame.image_url}
+                isRevealed={isRevealed}
+                movieTitle={currentFrame.movies.title}
+              />
+            </div>
 
             {/* Timer (only show after reveal) */}
             {isRevealed && !showingAnswer && (
-              <Timer
-                duration={20}
-                isActive={timerActive}
-                onTimeUp={handleTimeUp}
-                onTick={(elapsed) => setElapsedTime(elapsed)}
-              />
+              <div className="animate-slide-in-up shrink-0">
+                <Timer
+                  duration={20}
+                  isActive={timerActive}
+                  onTimeUp={handleTimeUp}
+                  onTick={(elapsed) => setElapsedTime(elapsed)}
+                />
+              </div>
             )}
 
             {/* Answer Input (only show after reveal) */}
             {isRevealed && !showingAnswer && (
-              <AnswerInput
-                onSubmit={onSubmitAnswer}
-                disabled={!timerActive}
-                isCorrect={answerResult}
-              />
+              <div className="animate-slide-in-up shrink-0" style={{animationDelay: '0.1s'}}>
+                <AnswerInput
+                  onSubmit={onSubmitAnswer}
+                  disabled={!timerActive}
+                  isCorrect={answerResult}
+                />
+              </div>
             )}
 
             {/* Game Controls */}
-            <GameControls
-              onReveal={handleReveal}
-              onNext={handleNextFrame}
-              onShowAnswer={handleShowAnswer}
-              isRevealed={isRevealed}
-              correctAnswer={currentFrame.movies?.title || 'Unknown'}
-              showingAnswer={showingAnswer}
-            />
+            <div className="animate-slide-in-up shrink-0" style={{animationDelay: '0.2s'}}>
+              <GameControls
+                onReveal={handleReveal}
+                onNext={handleNextFrame}
+                onShowAnswer={handleShowAnswer}
+                isRevealed={isRevealed}
+                correctAnswer={currentFrame.movies.title}
+                showingAnswer={showingAnswer}
+              />
+            </div>
           </div>
 
           {/* Right Column - Scoreboard */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 min-h-0">
             <Scoreboard
               score={score}
               frameNumber={currentFrameIndex + 1}
@@ -198,11 +213,15 @@ function GameContent() {
 export default function GamePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center">
-        <div className="text-white text-2xl">Loading game...</div>
+      <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center">
+        <div className="flex items-center gap-3">
+          <Film className="w-8 h-8 text-[#8D5A2B]" />
+          <div className="text-[#8D5A2B] text-3xl font-bold">Loading...</div>
+        </div>
       </div>
     }>
       <GameContent />
     </Suspense>
   )
 }
+

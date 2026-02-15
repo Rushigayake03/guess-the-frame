@@ -257,13 +257,13 @@ export default function AdminUploadPage() {
 
   return (
     <AdminAuthGuard>
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-8">
+      <div className="min-h-screen bg-[#FDFBD4] p-8">
         <AdminHeader />
-            <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black p-8">
+            <div className="min-h-screen bg-[#FDFBD4] p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-white mb-4">
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">
             🎬 Upload Movie Frame
           </h1>
           <p className="text-gray-300 text-lg">
@@ -459,7 +459,7 @@ export default function AdminUploadPage() {
           <button
             type="submit"
             disabled={loading || !tmdbId || !movieTitle || !movieYear || !imageFile}
-            className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-105 active:scale-95"
+            className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
           >
             {loading ? '⏳ Uploading...' : imageFile ? '✅ Upload Frame' : '⚠️ Select an Image First'}
           </button>
@@ -483,3 +483,4 @@ export default function AdminUploadPage() {
     </AdminAuthGuard>
   )
 }
+

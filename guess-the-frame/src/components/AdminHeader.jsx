@@ -41,8 +41,8 @@ export default function AdminHeader() {
           />
         </div>
         <div>
-          <p className="text-white font-bold">Admin User</p>
-          <p className="text-gray-400 text-sm">{user?.email}</p>
+          <p className="text-gray-900 font-bold">Admin User</p>
+          <p className="text-gray-800 text-sm font-medium">{user?.email}</p>
         </div>
       </div>
       <button
@@ -54,3 +54,4 @@ export default function AdminHeader() {
     </div>
   )
 }
+
