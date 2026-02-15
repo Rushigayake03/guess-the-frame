@@ -59,12 +59,12 @@ export default function AnswerInput({
           className={`w-full px-5 py-3.5 text-base rounded-xl border-2 transition-all duration-300
             backdrop-blur-sm font-medium tracking-wide
             ${disabled 
-              ? 'bg-black/30 border-gray-700/50 text-gray-500 cursor-not-allowed' 
-              : 'bg-black/40 border-yellow-600/50 text-white focus:border-yellow-500 focus:ring-4 focus:ring-yellow-500/20 focus:shadow-lg focus:shadow-yellow-500/20'
+              ? 'bg-[#e6dcc3] border-[#b9a47f] text-gray-600 cursor-not-allowed' 
+              : 'bg-[#efe4c9] border-[#b47f47] text-gray-900 focus:border-[#8D5A2B] focus:ring-4 focus:ring-[#c29158]/30 focus:shadow-lg focus:shadow-[#c29158]/25'
             }
             ${isCorrect === true ? 'border-green-500 bg-green-500/20 shadow-lg shadow-green-500/30' : ''}
             ${isCorrect === false ? 'border-red-500 bg-red-500/20 shadow-lg shadow-red-500/30' : ''}
-            outline-none placeholder:text-gray-500`}
+            outline-none placeholder:text-gray-600`}
           autoComplete="off"
           autoFocus={!disabled}
         />
@@ -75,8 +75,8 @@ export default function AnswerInput({
           disabled={disabled || !answer.trim()}
           className={`absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2 rounded-lg text-sm font-bold transition-all duration-200
             ${disabled || !answer.trim()
-              ? 'bg-gray-700/50 text-gray-500 cursor-not-allowed scale-95'
-              : 'bg-gradient-to-r from-yellow-600 to-yellow-500 text-black hover:from-yellow-500 hover:to-yellow-400 active:scale-[0.98] hover:scale-[1.02] shadow-lg hover:shadow-yellow-500/50'
+              ? 'bg-[#b8ac8f] text-[#6f6048] cursor-not-allowed scale-95'
+              : 'bg-gradient-to-r from-[#d47e30] to-[#8D5A2B] text-[#fffef4] hover:from-[#c06f2a] hover:to-[#825E34] active:scale-[0.98] hover:scale-[1.02] shadow-lg hover:shadow-[#b47f47]/40'
             }`}
         >
           SUBMIT

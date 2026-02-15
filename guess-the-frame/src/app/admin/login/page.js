@@ -32,14 +32,14 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">
             🔐 Admin Login
           </h1>
-          <p className="text-gray-400">
+          <p className="text-gray-700">
             Sign in to access the admin panel
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function AdminLoginPage() {
         <div className="text-center mt-6">
           <Link
             href="/"
-            className="text-gray-400 hover:text-white transition"
+            className="text-gray-700 hover:text-gray-900 transition"
           >
             ← Back to Home
           </Link>
@@ -106,3 +106,4 @@ export default function AdminLoginPage() {
     </div>
   )
 }
+

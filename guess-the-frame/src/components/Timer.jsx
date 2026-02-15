@@ -2,13 +2,13 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { AlertTriangle } from 'lucide-react'
 
 export default function Timer({ duration = 20, onTimeUp, isActive, onTick }) {
   const [timeLeft, setTimeLeft] = useState(duration)
   const onTickRef = useRef(onTick)
   const onTimeUpRef = useRef(onTimeUp)
 
-  // Update refs when callbacks change (avoids stale closures)
   useEffect(() => {
     onTickRef.current = onTick
   }, [onTick])
@@ -21,7 +21,6 @@ export default function Timer({ duration = 20, onTimeUp, isActive, onTick }) {
     if (!isActive) return
 
     if (timeLeft <= 0) {
-      // Use ref to call onTimeUp
       if (onTimeUpRef.current) {
         onTimeUpRef.current()
       }
@@ -31,19 +30,14 @@ export default function Timer({ duration = 20, onTimeUp, isActive, onTick }) {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         const newTime = prev - 1
-        
-        // Defer the callback to next tick to avoid setState during render
         if (onTickRef.current && newTime >= 0) {
           const elapsed = duration - newTime
-          
-          // Use setTimeout to schedule after current render
           setTimeout(() => {
             if (onTickRef.current) {
               onTickRef.current(elapsed)
             }
           }, 0)
         }
-        
         return newTime
       })
     }, 1000)
@@ -51,7 +45,6 @@ export default function Timer({ duration = 20, onTimeUp, isActive, onTick }) {
     return () => clearInterval(timer)
   }, [timeLeft, isActive, duration])
 
-  // Reset when duration changes
   useEffect(() => {
     setTimeLeft(duration)
   }, [duration])
@@ -62,36 +55,34 @@ export default function Timer({ duration = 20, onTimeUp, isActive, onTick }) {
 
   return (
     <div className="w-full">
-      {/* Time Display */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-medium text-gray-400">Time Remaining</span>
-        <span 
+        <span className="text-xs font-semibold text-gray-800 uppercase tracking-wide">Time Remaining</span>
+        <span
           className={`text-4xl font-bold tabular-nums transition-colors ${
-            isCritical ? 'text-red-500 animate-pulse' : 
-            isWarning ? 'text-orange-500' : 
-            'text-white'
+            isCritical ? 'text-red-600 animate-pulse' :
+            isWarning ? 'text-orange-700' :
+            'text-gray-900'
           }`}
         >
           {timeLeft}s
         </span>
       </div>
-      
-      {/* Progress Bar */}
+
       <div className="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden shadow-inner">
         <div
           className={`h-full transition-all duration-1000 ease-linear ${
             isCritical ? 'bg-red-500' :
-            isWarning ? 'bg-orange-500' : 
+            isWarning ? 'bg-orange-500' :
             'bg-green-500'
           }`}
           style={{ width: `${percentage}%` }}
         />
       </div>
 
-      {/* Warning Text */}
       {isWarning && (
-        <p className="text-center text-sm mt-2 text-orange-400 font-medium">
-          ⚠️ Hurry up!
+        <p className="text-center text-sm mt-2 text-orange-700 font-bold inline-flex items-center justify-center gap-2 w-full">
+          <AlertTriangle className="w-4 h-4" />
+          Hurry up!
         </p>
       )}
     </div>

@@ -21,7 +21,7 @@ export default function PlayPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black relative overflow-hidden">
+    <div className="min-h-screen bg-[#FDFBD4] relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-0 w-full h-full">
@@ -35,7 +35,7 @@ export default function PlayPage() {
         {/* Back Button */}
         <Link 
           href="/"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-yellow-400 mb-8 transition-all duration-200 font-bold uppercase tracking-wide hover:scale-[1.02] transform"
+          className="inline-flex items-center gap-2 text-gray-700 hover:text-yellow-400 mb-8 transition-all duration-200 font-bold uppercase tracking-wide hover:scale-[1.02] transform"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Lobby
@@ -50,13 +50,13 @@ export default function PlayPage() {
                 <h1 className="text-6xl font-black text-yellow-400 uppercase tracking-wider drop-shadow-lg">
                   Select Cinema
                 </h1>
-                <p className="text-gray-300 text-lg font-medium">Choose your movie category</p>
+                <p className="text-gray-800 text-lg font-medium">Choose your movie category</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Game Mode Cards with Shimmer Effect */}
+        {/* Game Mode Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
           {/* Hollywood */}
           <button
@@ -78,10 +78,6 @@ export default function PlayPage() {
                 <Clock className="w-4 h-4" />
                 Time Bonus
               </span>
-            </div>
-            {/* Shimmer Effect */}
-            <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
-              <div className="relative h-full w-8 bg-white/20"></div>
             </div>
           </button>
 
@@ -107,10 +103,6 @@ export default function PlayPage() {
                 Time Bonus
               </span>
             </div>
-            {/* Shimmer Effect */}
-            <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
-              <div className="relative h-full w-8 bg-white/20"></div>
-            </div>
           </button>
 
           {/* Mixed */}
@@ -135,35 +127,31 @@ export default function PlayPage() {
                 Time Bonus
               </span>
             </div>
-            {/* Shimmer Effect */}
-            <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
-              <div className="relative h-full w-8 bg-white/20"></div>
-            </div>
           </button>
         </div>
 
         {/* Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <div className="bg-black/40 backdrop-blur-md p-6 rounded-xl border-2 border-yellow-600/30 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-yellow-500/50 animate-fade-in" style={{animationDelay: '0.3s'}}>
+          <div className="bg-[#fff8dc]/95 backdrop-blur-md p-6 rounded-xl border-2 border-[#c29257]/60 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-yellow-500/50 animate-fade-in" style={{animationDelay: '0.3s'}}>
             <Zap className="w-12 h-12 text-yellow-400 mb-3" />
             <h3 className="text-yellow-400 font-black mb-2 text-xl uppercase tracking-wide">Speed Bonus</h3>
-            <p className="text-gray-300 font-medium">
+            <p className="text-gray-800 font-medium">
               Answer within 5 seconds for <span className="text-yellow-400 font-bold">+5 bonus</span> points!
             </p>
           </div>
 
-          <div className="bg-black/40 backdrop-blur-md p-6 rounded-xl border-2 border-blue-600/30 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-blue-500/50 animate-fade-in" style={{animationDelay: '0.4s'}}>
+          <div className="bg-[#fff8dc]/95 backdrop-blur-md p-6 rounded-xl border-2 border-[#b9864e]/55 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-blue-500/50 animate-fade-in" style={{animationDelay: '0.4s'}}>
             <Target className="w-12 h-12 text-blue-400 mb-3" />
             <h3 className="text-blue-400 font-black mb-2 text-xl uppercase tracking-wide">20 Frame Quest</h3>
-            <p className="text-gray-300 font-medium">
+            <p className="text-gray-800 font-medium">
               Identify as many movies as you can from <span className="text-blue-400 font-bold">single frames</span>
             </p>
           </div>
 
-          <div className="bg-black/40 backdrop-blur-md p-6 rounded-xl border-2 border-purple-600/30 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-purple-500/50 animate-fade-in" style={{animationDelay: '0.5s'}}>
+          <div className="bg-[#fff8dc]/95 backdrop-blur-md p-6 rounded-xl border-2 border-[#ad7944]/55 transition-all duration-300 ease-out hover:scale-[1.02] hover:border-purple-500/50 animate-fade-in" style={{animationDelay: '0.5s'}}>
             <Trophy className="w-12 h-12 text-purple-400 mb-3" />
             <h3 className="text-purple-400 font-black mb-2 text-xl uppercase tracking-wide">High Score</h3>
-            <p className="text-gray-300 font-medium">
+            <p className="text-gray-800 font-medium">
               Track your score and <span className="text-purple-400 font-bold">compete</span> for the top spot!
             </p>
           </div>
@@ -172,3 +160,5 @@ export default function PlayPage() {
     </div>
   )
 }
+
+
