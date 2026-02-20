@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Guess the Frame
 
-## Getting Started
+A movie quiz web app where players guess a movie from a single frame under time pressure.
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+Guess the Frame is built with Next.js and Supabase. Players choose a mode (Hollywood, Bollywood, or Mixed), reveal each frame, and submit answers before the timer ends. The app includes fuzzy answer matching, time-based scoring, and an admin panel to manage frames and packs.
+
+## Features
+
+- Multiple game modes: `hollywood`, `bollywood`, `mixed`
+- 20-frame game session (or fewer if less data exists)
+- Time-based scoring with speed bonus
+- Fuzzy answer matching (typo-tolerant)
+- Results screen with score, accuracy, and grade
+- Admin panel for uploading and managing movie frames
+- TMDb movie info fetch API for quick admin input
+
+## Tech Stack
+
+- Next.js 16 (App Router)
+- React 19
+- Tailwind CSS 4
+- Supabase (Database + Storage)
+- TMDb API
+
+## Project Structure
+
+```text
+guess-the-frame/
+  src/
+    app/
+      admin/
+      api/tmdb-fetch/
+      game/
+      play/
+      results/
+    components/
+    hooks/
+    lib/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Prerequisites
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Node.js 18+
+- npm
+- Supabase project with required tables/storage
+- TMDb API key
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Variables
 
-## Learn More
+Copy `.env.local` and fill values:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+NEXT_PUBLIC_TMDB_API_KEY=your-tmdb-api-key
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+Open `http://localhost:3000`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Gameplay Rules
+
+- Select a mode from the Play screen
+- Reveal frame to start the 20-second timer
+- Submit movie title before time runs out
+- Correct answers score points based on speed
+- Move through all frames to complete the session
+
+Scoring logic:
+
+- Correct answer base score with time bonus
+- Maximum expected score per frame: `15`
+
+## Admin Workflow
+
+- Go to `/admin`
+- Upload frame images and associate with movies
+- Optionally fetch movie metadata by TMDb ID
+- Manage frames and packs from admin pages
+
+## Notes
+
+- The game fetches frames from Supabase and shuffles them each session.
+- Mixed mode includes all available movies.
+- Hollywood/Bollywood modes include entries marked for that genre (plus shared entries if configured as `both`).
+
+## Owner
+
+Rushikesh Gayke
