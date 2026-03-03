@@ -2,7 +2,7 @@ name: Keep Supabase Awake
 
 on:
   schedule:
-    - cron: "0 0 */3 * *"   # runs every 3 days
+    - cron: "0 0 */3 * *"
   workflow_dispatch:
 
 jobs:
@@ -12,4 +12,4 @@ jobs:
     steps:
       - name: Ping Supabase
         run: |
-          curl -X GET "https://njrxegrvkjnzylvxbkjj.supabase.co/rest/v1/"
+          curl "${{ secrets.SUPABASE_URL }}/rest/v1/?apikey=${{ secrets.SUPABASE_ANON_KEY }}"
