@@ -2,14 +2,25 @@ name: Keep Supabase Awake
 
 on:
   schedule:
-    - cron: "0 0 */3 * *"
+    - cron: "0 0 * * *"   # Every day at midnight UTC — safe daily buffer
   workflow_dispatch:
 
 jobs:
   ping:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Ping Supabase
+      - name: Query Supabase Table
         run: |
-          curl "${{ secrets.SUPABASE_URL }}/rest/v1/?apikey=${{ secrets.SUPABASE_ANON_KEY }}"
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/packs?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
+          
+          echo "HTTP Status: $RESPONSE"
+          
+          if [ "$RESPONSE" -ne 200 ]; then
+            echo "FAILED - Ping returned status $RESPONSE"
+            exit 1
+          else
+            echo "SUCCESS - Supabase is alive"
+          fi
