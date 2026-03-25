@@ -2,25 +2,31 @@ name: Keep Supabase Awake
 
 on:
   schedule:
-    - cron: "0 0 * * *"   # Every day at midnight UTC — safe daily buffer
+    - cron: "0 */6 * * *"   # Every 6 hours
   workflow_dispatch:
 
 jobs:
   ping:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Query Supabase Table
+      - name: Ping Supabase via RPC
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
-            "${{ secrets.SUPABASE_URL }}/rest/v1/packs?select=id&limit=1" \
-            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
-            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}")
-          
-          echo "HTTP Status: $RESPONSE"
-          
-          if [ "$RESPONSE" -ne 200 ]; then
-            echo "FAILED - Ping returned status $RESPONSE"
+          echo "Pinging Supabase..."
+
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" \
+            -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/rpc/keep_alive" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json")
+
+          echo "$RESPONSE"
+
+          STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d':' -f2)
+
+          if [ "$STATUS" -ne 200 ]; then
+            echo " FAILEDdd - Status $STATUS"
             exit 1
           else
-            echo "SUCCESS - Supabase is alive"
+            echo " SUCCESSss - Supabase is active"
           fi
