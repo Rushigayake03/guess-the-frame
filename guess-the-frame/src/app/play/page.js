@@ -1,14 +1,19 @@
 // app/play/page.js
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Film, Drama, Globe, Zap, Target, Trophy, BarChart3, Clock } from 'lucide-react'
+import { GAME_MODES } from '@/lib/game-modes'
+
+const modeIcons = {
+  film: Film,
+  drama: Drama,
+  globe: Globe,
+}
 
 export default function PlayPage() {
   const router = useRouter()
-  const [selectedMode, setSelectedMode] = useState(null)
 
   const startGame = (mode) => {
     // Play button click sound
@@ -58,76 +63,37 @@ export default function PlayPage() {
 
         {/* Game Mode Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
-          {/* Hollywood */}
-          <button
-            onClick={() => startGame('hollywood')}
-            className="group relative inline-flex h-auto flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 to-blue-800 p-8 font-medium text-white transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/50 shadow-2xl border-4 border-blue-400/30 animate-slide-in-up"
-          >
-            <Film className="w-20 h-20 text-white mb-4 z-10 relative" />
-            <h2 className="text-4xl font-black text-white mb-3 uppercase tracking-wide z-10 relative">Hollywood</h2>
-            <p className="text-blue-100 mb-6 font-medium text-lg z-10 relative">
-              English movies from around the world
-            </p>
-            <div className="flex items-center justify-center gap-4 text-sm text-blue-200 bg-black/30 rounded-lg py-2 px-4 z-10 relative">
-              <span className="font-bold flex items-center gap-1">
-                <BarChart3 className="w-4 h-4" />
-                20 Frames
-              </span>
-              <span className="text-blue-300">|</span>
-              <span className="font-bold flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                Time Bonus
-              </span>
-            </div>
-          </button>
+          {GAME_MODES.map((mode) => {
+            const ModeIcon = modeIcons[mode.icon]
 
-          {/* Bollywood */}
-          <button
-            onClick={() => startGame('bollywood')}
-            className="group relative inline-flex h-auto flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-orange-600 to-orange-800 p-8 font-medium text-white transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-2xl hover:shadow-orange-500/50 shadow-2xl border-4 border-orange-400/30 animate-slide-in-up"
-            style={{animationDelay: '0.1s'}}
-          >
-            <Drama className="w-20 h-20 text-white mb-4 z-10 relative" />
-            <h2 className="text-4xl font-black text-white mb-3 uppercase tracking-wide z-10 relative">Bollywood</h2>
-            <p className="text-orange-100 mb-6 font-medium text-lg z-10 relative">
-              Hindi cinema classics and blockbusters
-            </p>
-            <div className="flex items-center justify-center gap-4 text-sm text-orange-200 bg-black/30 rounded-lg py-2 px-4 z-10 relative">
-              <span className="font-bold flex items-center gap-1">
-                <BarChart3 className="w-4 h-4" />
-                20 Frames
-              </span>
-              <span className="text-orange-300">|</span>
-              <span className="font-bold flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                Time Bonus
-              </span>
-            </div>
-          </button>
-
-          {/* Mixed */}
-          <button
-            onClick={() => startGame('mixed')}
-            className="group relative inline-flex h-auto flex-col items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-purple-600 to-purple-800 p-8 font-medium text-white transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/50 shadow-2xl border-4 border-purple-400/30 animate-slide-in-up"
-            style={{animationDelay: '0.2s'}}
-          >
-            <Globe className="w-20 h-20 text-white mb-4 z-10 relative" />
-            <h2 className="text-4xl font-black text-white mb-3 uppercase tracking-wide z-10 relative">Mixed</h2>
-            <p className="text-purple-100 mb-6 font-medium text-lg z-10 relative">
-              The ultimate challenge - All movies!
-            </p>
-            <div className="flex items-center justify-center gap-4 text-sm text-purple-200 bg-black/30 rounded-lg py-2 px-4 z-10 relative">
-              <span className="font-bold flex items-center gap-1">
-                <BarChart3 className="w-4 h-4" />
-                20 Frames
-              </span>
-              <span className="text-purple-300">|</span>
-              <span className="font-bold flex items-center gap-1">
-                <Clock className="w-4 h-4" />
-                Time Bonus
-              </span>
-            </div>
-          </button>
+            return (
+              <button
+                key={mode.slug}
+                onClick={() => startGame(mode.slug)}
+                className={`group relative inline-flex h-auto flex-col items-center justify-center overflow-hidden rounded-2xl p-8 font-medium text-white transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-2xl shadow-2xl border-4 animate-slide-in-up ${mode.cardClassName}`}
+                style={{ animationDelay: mode.animationDelay }}
+              >
+                <ModeIcon className="w-20 h-20 text-white mb-4 z-10 relative" />
+                <h2 className="text-4xl font-black text-white mb-3 uppercase tracking-wide z-10 relative">
+                  {mode.title}
+                </h2>
+                <p className={`mb-6 font-medium text-lg z-10 relative ${mode.descriptionClassName}`}>
+                  {mode.description}
+                </p>
+                <div className={`flex items-center justify-center gap-4 text-sm bg-black/30 rounded-lg py-2 px-4 z-10 relative ${mode.metaClassName}`}>
+                  <span className="font-bold flex items-center gap-1">
+                    <BarChart3 className="w-4 h-4" />
+                    20 Frames
+                  </span>
+                  <span className={mode.separatorClassName}>|</span>
+                  <span className="font-bold flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    Time Bonus
+                  </span>
+                </div>
+              </button>
+            )
+          })}
         </div>
 
         {/* Info Cards */}
