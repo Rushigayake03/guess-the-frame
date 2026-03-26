@@ -1,10 +1,14 @@
 // components/BlurredFrame.jsx
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Film, Loader2 } from 'lucide-react'
 
 export default function BlurredFrame({ imageUrl, isRevealed, movieTitle }) {
   const [imageLoaded, setImageLoaded] = useState(false)
+
+  useEffect(() => {
+    setImageLoaded(false)
+  }, [imageUrl])
 
   return (
     <div className="relative w-full">
