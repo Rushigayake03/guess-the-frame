@@ -73,7 +73,7 @@ export default function PlayPage() {
                 <BarChart3 className="w-4 h-4" />
                 20 Frames
               </span>
-              <span className="text-blue-300">•</span>
+              <span className="text-blue-300">|</span>
               <span className="font-bold flex items-center gap-1">
                 <Clock className="w-4 h-4" />
                 Time Bonus
@@ -97,7 +97,7 @@ export default function PlayPage() {
                 <BarChart3 className="w-4 h-4" />
                 20 Frames
               </span>
-              <span className="text-orange-300">•</span>
+              <span className="text-orange-300">|</span>
               <span className="font-bold flex items-center gap-1">
                 <Clock className="w-4 h-4" />
                 Time Bonus
@@ -121,7 +121,7 @@ export default function PlayPage() {
                 <BarChart3 className="w-4 h-4" />
                 20 Frames
               </span>
-              <span className="text-purple-300">•</span>
+              <span className="text-purple-300">|</span>
               <span className="font-bold flex items-center gap-1">
                 <Clock className="w-4 h-4" />
                 Time Bonus

@@ -167,7 +167,7 @@ export default function Home() {
         {/* Footer Note */}
         <div className="text-center mt-12">
           <p className="text-gray-500 text-sm font-medium">
-            Test your cinema knowledge • 20 frames per game • Real-time scoring
+            Test your cinema knowledge | 20 frames per game | Real-time scoring
           </p>
         </div>
       </div>
