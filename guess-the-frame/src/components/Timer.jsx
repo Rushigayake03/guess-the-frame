@@ -58,7 +58,7 @@ export default function Timer({ duration = 20, onTimeUp, isActive, onTick }) {
       <div className="flex items-center justify-between mb-3">
         <span className="text-xs font-semibold text-gray-800 uppercase tracking-wide">Time Remaining</span>
         <span
-          className={`text-4xl font-bold tabular-nums transition-colors ${
+          className={`text-3xl font-bold tabular-nums transition-colors sm:text-4xl ${
             isCritical ? 'text-red-600 animate-pulse' :
             isWarning ? 'text-orange-700' :
             'text-gray-900'

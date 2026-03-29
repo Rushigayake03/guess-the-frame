@@ -56,7 +56,7 @@ export default function AnswerInput({
           onChange={(e) => setAnswer(e.target.value)}
           disabled={disabled}
           placeholder={placeholder}
-          className={`w-full px-5 py-3.5 text-base rounded-xl border-2 transition-all duration-300
+          className={`w-full rounded-xl border-2 px-4 py-3 text-base transition-all duration-300 sm:px-5 sm:py-3.5
             backdrop-blur-sm font-medium tracking-wide
             ${disabled 
               ? 'bg-[#e6dcc3] border-[#b9a47f] text-gray-600 cursor-not-allowed' 
@@ -64,7 +64,7 @@ export default function AnswerInput({
             }
             ${isCorrect === true ? 'border-green-500 bg-green-500/20 shadow-lg shadow-green-500/30' : ''}
             ${isCorrect === false ? 'border-red-500 bg-red-500/20 shadow-lg shadow-red-500/30' : ''}
-            outline-none placeholder:text-gray-600`}
+            outline-none placeholder:text-gray-600 sm:pr-36`}
           autoComplete="off"
           autoFocus={!disabled}
         />
@@ -73,7 +73,7 @@ export default function AnswerInput({
         <button
           type="submit"
           disabled={disabled || !answer.trim()}
-          className={`absolute right-2 top-1/2 -translate-y-1/2 px-5 py-2 rounded-lg text-sm font-bold transition-all duration-200
+          className={`mt-3 w-full rounded-lg px-5 py-2.5 text-sm font-bold transition-all duration-200 sm:absolute sm:right-2 sm:top-1/2 sm:mt-0 sm:w-auto sm:-translate-y-1/2 sm:py-2
             ${disabled || !answer.trim()
               ? 'bg-[#b8ac8f] text-[#6f6048] cursor-not-allowed scale-95'
               : 'bg-gradient-to-r from-[#d47e30] to-[#8D5A2B] text-[#fffef4] hover:from-[#c06f2a] hover:to-[#825E34] active:scale-[0.98] hover:scale-[1.02] shadow-lg hover:shadow-[#b47f47]/40'
@@ -86,16 +86,16 @@ export default function AnswerInput({
       {/* Result Feedback with Scale Animation */}
       {isCorrect === true && (
         <div className="mt-3 animate-scale-in">
-          <p className="text-green-400 font-bold flex items-center gap-2 text-sm bg-green-500/10 border border-green-500/30 rounded-lg px-3 py-2">
-            <CheckCircle className="w-6 h-6" />
+          <p className="flex items-center gap-2 rounded-lg border border-green-500/30 bg-green-500/10 px-3 py-2 text-sm font-bold text-green-400">
+            <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6" />
             CORRECT! Brilliant guess!
           </p>
         </div>
       )}
       {isCorrect === false && (
         <div className="mt-3 animate-scale-in">
-          <p className="text-red-400 font-bold flex items-center gap-2 text-sm bg-red-500/10 border border-red-500/30 rounded-lg px-3 py-2">
-            <XCircle className="w-6 h-6" />
+          <p className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm font-bold text-red-400">
+            <XCircle className="h-5 w-5 sm:h-6 sm:w-6" />
             Not quite. Try again!
           </p>
         </div>

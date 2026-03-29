@@ -17,7 +17,7 @@ export default function GameControls({
       {!isRevealed && (
         <button
           onClick={onReveal}
-          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-3 px-6 rounded-xl text-base transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg inline-flex items-center justify-center gap-2"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 text-base font-bold text-white shadow-lg transition-all transform hover:scale-[1.02] hover:from-blue-500 hover:to-blue-600 active:scale-[0.98]"
         >
           <Search className="h-5 w-5" />
           Reveal Frame
@@ -25,10 +25,10 @@ export default function GameControls({
       )}
 
       {isRevealed && (
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           <button
             onClick={onShowAnswer}
-            className="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] inline-flex items-center justify-center gap-2"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-yellow-600 px-4 py-3 font-bold text-white transition-all transform hover:scale-[1.02] hover:bg-yellow-700 active:scale-[0.98]"
           >
             <Lightbulb className="h-5 w-5" />
             Show Answer
@@ -36,7 +36,7 @@ export default function GameControls({
 
           <button
             onClick={onNext}
-            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-[1.02] active:scale-[0.98] inline-flex items-center justify-center gap-2"
+            className="inline-flex items-center justify-center gap-2 rounded-xl bg-purple-600 px-4 py-3 font-bold text-white transition-all transform hover:scale-[1.02] hover:bg-purple-700 active:scale-[0.98]"
           >
             <SkipForward className="h-5 w-5" />
             Next Frame
@@ -45,9 +45,9 @@ export default function GameControls({
       )}
 
       {showingAnswer && correctAnswer && (
-        <div className="bg-gradient-to-r from-purple-700 to-orange-700 p-3 rounded-xl text-center">
+        <div className="rounded-xl bg-gradient-to-r from-purple-700 to-orange-700 p-3 text-center">
           <p className="text-sm text-orange-100 mb-1">Correct Answer:</p>
-          <p className="text-xl font-bold text-white">{correctAnswer}</p>
+          <p className="text-lg font-bold text-white sm:text-xl">{correctAnswer}</p>
         </div>
       )}
     </div>

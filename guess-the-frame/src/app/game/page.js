@@ -63,11 +63,11 @@ function GameContent() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center">
-        <div className="text-center">
+        <div className="px-4 text-center">
           <div className="relative">
-            <Loader2 className="w-24 h-24 text-yellow-500 mx-auto mb-6 animate-spin" />
+            <Loader2 className="mx-auto mb-5 h-16 w-16 text-yellow-500 animate-spin sm:mb-6 sm:h-24 sm:w-24" />
           </div>
-          <p className="text-[#8D5A2B] text-2xl font-bold uppercase tracking-wider">Loading Cinema...</p>
+          <p className="text-xl font-bold uppercase tracking-wide text-[#8D5A2B] sm:text-2xl sm:tracking-wider">Loading Cinema...</p>
           <p className="text-gray-700 text-sm mt-2">Preparing your frames</p>
         </div>
       </div>
@@ -77,10 +77,10 @@ function GameContent() {
   // Error state
   if (error) {
     return (
-      <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center p-8">
-        <div className="max-w-md bg-red-500/10 border-2 border-red-500 rounded-2xl p-8 text-center backdrop-blur-md">
-          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-          <h2 className="text-3xl font-black text-red-400 mb-4 uppercase">Film Reel Error</h2>
+      <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center p-4 sm:p-8">
+        <div className="max-w-md rounded-2xl border-2 border-red-500 bg-red-500/10 p-6 text-center backdrop-blur-md sm:p-8">
+          <AlertCircle className="mx-auto mb-4 h-14 w-14 text-red-400 sm:h-16 sm:w-16" />
+          <h2 className="mb-4 text-2xl font-black uppercase text-red-400 sm:text-3xl">Film Reel Error</h2>
           <p className="text-red-300 mb-6 font-medium">{error}</p>
           <div className="space-y-3">
             <button
@@ -105,45 +105,45 @@ function GameContent() {
   if (!currentFrame) {
     return (
       <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center">
-        <div className="text-center">
-          <Film className="w-16 h-16 text-[#8D5A2B] mx-auto mb-4" />
-          <p className="text-[#8D5A2B] text-2xl font-bold">No frames available</p>
+        <div className="px-4 text-center">
+          <Film className="mx-auto mb-4 h-14 w-14 text-[#8D5A2B] sm:h-16 sm:w-16" />
+          <p className="text-xl font-bold text-[#8D5A2B] sm:text-2xl">No frames available</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="h-screen bg-[#FDFBD4] relative overflow-hidden">
+    <div className="min-h-screen bg-[#FDFBD4] relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-600/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        <div className="absolute top-1/4 left-1/4 h-64 w-64 rounded-full bg-yellow-600/5 blur-3xl animate-pulse sm:h-80 sm:w-80 lg:h-96 lg:w-96"></div>
+        <div className="absolute bottom-1/4 right-1/4 h-64 w-64 rounded-full bg-purple-600/5 blur-3xl animate-pulse sm:h-80 sm:w-80 lg:h-96 lg:w-96" style={{animationDelay: '1s'}}></div>
       </div>
 
-      <div className="container mx-auto h-full px-4 py-3 relative z-10 flex flex-col max-w-7xl">
+      <div className="container mx-auto max-w-7xl px-4 py-4 sm:py-5 lg:min-h-screen lg:py-6 relative z-10 flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between mb-3 animate-slide-in-down shrink-0">
-          <div className="flex items-center gap-4">
-            <Film className="w-8 h-8 lg:w-10 lg:h-10 text-[#8D5A2B]" />
+        <div className="mb-4 flex flex-col gap-3 animate-slide-in-down shrink-0 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Film className="h-7 w-7 text-[#8D5A2B] sm:h-8 sm:w-8 lg:h-10 lg:w-10" />
             <div>
-              <h1 className="text-2xl lg:text-3xl font-black text-[#8D5A2B] uppercase tracking-wider drop-shadow-lg">
+              <h1 className="text-xl font-black uppercase tracking-wide text-[#8D5A2B] drop-shadow-lg sm:text-2xl lg:text-3xl lg:tracking-wider">
                 Guess the Frame
               </h1>
-              <p className="text-gray-700 text-xs lg:text-sm font-medium">Can you identify the movie?</p>
+              <p className="text-xs font-medium text-gray-700 lg:text-sm">Can you identify the movie?</p>
             </div>
           </div>
-          <div className="bg-[#b8ac8f]/95 backdrop-blur-md border-2 border-[#9b7648]/45 rounded-xl px-4 py-2">
+          <div className="w-full rounded-xl border-2 border-[#9b7648]/45 bg-[#b8ac8f]/95 px-4 py-2 backdrop-blur-md sm:w-auto">
             <p className="text-[#8D5A2B] text-xs font-bold uppercase tracking-wide">Frame</p>
-            <p className="text-gray-900 text-2xl font-black">{currentFrameIndex + 1}<span className="text-base text-gray-700">/{totalFrames}</span></p>
+            <p className="text-2xl font-black text-gray-900 sm:text-right">{currentFrameIndex + 1}<span className="text-base text-gray-700">/{totalFrames}</span></p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 flex-1 min-h-0">
+        <div className="grid grid-cols-1 gap-4 lg:min-h-0 lg:flex-1 lg:grid-cols-3">
           {/* Left Column - Game Area */}
-          <div className="lg:col-span-2 min-h-0 flex flex-col gap-3">
+          <div className="flex min-h-0 flex-col gap-3 lg:col-span-2">
             {/* Movie Frame */}
-            <div className="animate-slide-in-left flex-1 min-h-0">
+            <div className="animate-slide-in-left">
               <BlurredFrame
                 imageUrl={currentFrame.image_url}
                 isRevealed={isRevealed}
@@ -153,7 +153,7 @@ function GameContent() {
 
             {/* Timer (only show after reveal) */}
             {isRevealed && !showingAnswer && (
-              <div className="animate-slide-in-up shrink-0">
+              <div className="animate-slide-in-up shrink-0 rounded-2xl border border-[#b59e78]/60 bg-[#efe4c9]/80 p-4 backdrop-blur-sm">
                 <Timer
                   duration={20}
                   isActive={timerActive}
@@ -175,10 +175,10 @@ function GameContent() {
             )}
 
             {/* Game Controls */}
-            <div className="animate-slide-in-up shrink-0" style={{animationDelay: '0.2s'}}>
-              <GameControls
-                onReveal={handleReveal}
-                onNext={handleNextFrame}
+              <div className="animate-slide-in-up shrink-0" style={{animationDelay: '0.2s'}}>
+                <GameControls
+                  onReveal={handleReveal}
+                  onNext={handleNextFrame}
                 onShowAnswer={handleShowAnswer}
                 isRevealed={isRevealed}
                 correctAnswer={currentFrame.movies.title}
@@ -188,7 +188,7 @@ function GameContent() {
           </div>
 
           {/* Right Column - Scoreboard */}
-          <div className="lg:col-span-1 min-h-0">
+          <div className="lg:col-span-1 lg:min-h-0">
             <Scoreboard
               score={score}
               frameNumber={currentFrameIndex + 1}
@@ -216,7 +216,7 @@ export default function GamePage() {
       <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center">
         <div className="flex items-center gap-3">
           <Film className="w-8 h-8 text-[#8D5A2B]" />
-          <div className="text-[#8D5A2B] text-3xl font-bold">Loading...</div>
+          <div className="text-2xl font-bold text-[#8D5A2B] sm:text-3xl">Loading...</div>
         </div>
       </div>
     }>

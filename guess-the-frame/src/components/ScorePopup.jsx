@@ -73,18 +73,18 @@ export default function ScorePopup({ points, show, onComplete }) {
       ))}
 
       {/* Score Display with Scale Animation */}
-      <div className={`bg-gradient-to-br ${getColor()} text-white px-16 py-10 rounded-3xl shadow-2xl ${getGlow()} animate-scale-pop border-4 border-white/30`}>
-        <div className="flex items-center justify-center gap-3 mb-3">
-          <Icon className="w-10 h-10 animate-pulse" />
-          <p className="text-3xl font-black text-center tracking-wider">
+      <div className={`mx-4 rounded-3xl border-4 border-white/30 bg-gradient-to-br px-6 py-6 text-white shadow-2xl animate-scale-pop sm:px-10 sm:py-8 lg:px-16 lg:py-10 ${getColor()} ${getGlow()}`}>
+        <div className="mb-3 flex items-center justify-center gap-2 sm:gap-3">
+          <Icon className="h-7 w-7 animate-pulse sm:h-8 sm:w-8 lg:h-10 lg:w-10" />
+          <p className="text-center text-xl font-black tracking-wide sm:text-2xl lg:text-3xl lg:tracking-wider">
             {text}
           </p>
-          <Icon className="w-10 h-10 animate-pulse" />
+          <Icon className="h-7 w-7 animate-pulse sm:h-8 sm:w-8 lg:h-10 lg:w-10" />
         </div>
-        <p className="text-8xl font-black text-center drop-shadow-2xl animate-bounce-once">
+        <p className="text-center text-5xl font-black drop-shadow-2xl animate-bounce-once sm:text-6xl lg:text-8xl">
           +{points}
         </p>
-        <p className="text-lg text-center mt-3 font-bold opacity-90 uppercase tracking-widest">
+        <p className="mt-3 text-center text-sm font-bold uppercase tracking-[0.25em] opacity-90 sm:text-base lg:text-lg lg:tracking-widest">
           Points Earned
         </p>
       </div>
