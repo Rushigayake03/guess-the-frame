@@ -1,38 +1,32 @@
 // components/ScorePopup.jsx
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Star, Sparkles, Award } from 'lucide-react'
 
 export default function ScorePopup({ points, show, onComplete }) {
-  const [visible, setVisible] = useState(false)
-  const [particles, setParticles] = useState([])
-
-  useEffect(() => {
-    if (show && points > 0) {
-      setVisible(true)
-      
-      // Create particle burst effect
-      const newParticles = Array.from({ length: 12 }, (_, i) => ({
+  const visible = show && points > 0
+  const particles = visible
+    ? Array.from({ length: 12 }, (_, i) => ({
         id: i,
         angle: (360 / 12) * i,
         delay: i * 0.05
       }))
-      setParticles(newParticles)
+    : []
 
+  useEffect(() => {
+    if (visible) {
       // Play celebration sound
       const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3')
       audio.volume = 0.4
       audio.play().catch(e => console.log('Audio play failed:', e))
 
       const timer = setTimeout(() => {
-        setVisible(false)
-        setParticles([])
         onComplete?.()
       }, 2500)
 
       return () => clearTimeout(timer)
     }
-  }, [show, points, onComplete])
+  }, [visible, onComplete])
 
   if (!visible) return null
 

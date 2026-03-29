@@ -7,7 +7,6 @@ import Link from 'next/link'
 import AdminAuthGuard from '@/components/AdminAuthGuard'
 import AdminHeader from '@/components/AdminHeader'
 
-
 export default function ManageFramesPage() {
   const [frames, setFrames] = useState([])
   const [loading, setLoading] = useState(true)
@@ -37,7 +36,6 @@ export default function ManageFramesPage() {
         `)
         .order('created_at', { ascending: false })
 
-      // Apply filter
       if (filter !== 'all') {
         query = query.eq('movies.genre', filter)
       }
@@ -57,12 +55,10 @@ export default function ManageFramesPage() {
     if (!confirm('Are you sure you want to delete this frame?')) return
 
     try {
-      // Extract file path from URL
       const urlParts = imageUrl.split('/movie-frames/')
       if (urlParts.length > 1) {
         const filePath = urlParts[1]
 
-        // Delete from storage
         const { error: storageError } = await supabase.storage
           .from('movie-frames')
           .remove([filePath])
@@ -70,7 +66,6 @@ export default function ManageFramesPage() {
         if (storageError) console.error('Storage delete error:', storageError)
       }
 
-      // Delete from database
       const { error: dbError } = await supabase
         .from('frames')
         .delete()
@@ -78,7 +73,6 @@ export default function ManageFramesPage() {
 
       if (dbError) throw dbError
 
-      // Refresh list
       fetchFrames()
       alert('Frame deleted successfully!')
     } catch (error) {
@@ -123,195 +117,186 @@ export default function ManageFramesPage() {
 
   return (
     <AdminAuthGuard>
-      <div className="min-h-screen bg-[#FDFBD4] p-8">
-        <AdminHeader />
-            <div className="min-h-screen bg-[#FDFBD4] p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              🎬 Manage Frames
-            </h1>
-            <p className="text-gray-700 font-medium">
-              Total frames: {frames.length}
-            </p>
-          </div>
-          <div className="flex gap-3">
+      <div className="min-h-screen bg-[#FDFBD4] px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+        <div className="mx-auto max-w-7xl">
+          <AdminHeader />
+
+          <div className="mb-6 flex flex-col gap-4 sm:mb-8 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h1 className="mb-2 text-3xl font-bold text-gray-900 sm:text-4xl">
+                🎬 Manage Frames
+              </h1>
+              <p className="font-medium text-gray-700">
+                Total frames: {frames.length}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3">
               <Link
                 href="/admin/packs"
-                className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition">
-                📦 Manage Packs
-            </Link>
-            <Link
-              href="/admin/upload"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition"
-            >
-              + Upload New Frame
-            </Link>
-            <Link
-              href="/"
-              className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition"
-            >
-              ← Back to Home
-            </Link>
-          </div>
-        </div>
-
-        {/* Filter */}
-        <div className="flex gap-3 mb-8">
-          <button
-            onClick={() => setFilter('all')}
-            className={`px-6 py-2 rounded-lg font-bold transition ${
-              filter === 'all'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => setFilter('hollywood')}
-            className={`px-6 py-2 rounded-lg font-bold transition ${
-              filter === 'hollywood'
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            🎬 Hollywood
-          </button>
-          <button
-            onClick={() => setFilter('bollywood')}
-            className={`px-6 py-2 rounded-lg font-bold transition ${
-              filter === 'bollywood'
-                ? 'bg-orange-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-            }`}
-          >
-            🎭 Bollywood
-          </button>
-        </div>
-
-        {/* Frames Grid */}
-        {loading ? (
-          <div className="text-center text-white text-xl py-12">
-            Loading frames...
-          </div>
-        ) : frames.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-400 text-xl mb-4">No frames uploaded yet</p>
-            <Link
-              href="/admin/upload"
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition"
-            >
-              Upload Your First Frame
-            </Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {frames.map((frame) => (
-              <div
-                key={frame.id}
-                className="bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition"
+                className="rounded-lg bg-purple-600 px-4 py-3 font-bold text-white transition hover:bg-purple-700"
               >
-                {/* Frame Image */}
-                <div className="relative aspect-video bg-gray-900">
-                  <img
-                    src={frame.image_url}
-                    alt={frame.movies?.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
+                📦 Manage Packs
+              </Link>
+              <Link
+                href="/admin/upload"
+                className="rounded-lg bg-blue-600 px-4 py-3 font-bold text-white transition hover:bg-blue-700"
+              >
+                + Upload New Frame
+              </Link>
+              <Link
+                href="/"
+                className="rounded-lg bg-gray-700 px-4 py-3 font-bold text-white transition hover:bg-gray-600"
+              >
+                ← Back to Home
+              </Link>
+            </div>
+          </div>
 
-                {/* Frame Info */}
-                <div className="p-4">
-                  {editingMovie === frame.movies?.id ? (
-                    // Edit Form
-                    <div className="space-y-3">
-                      <input
-                        type="text"
-                        value={editForm.title}
-                        onChange={(e) => setEditForm({...editForm, title: e.target.value})}
-                        className="w-full px-3 py-2 bg-gray-900 text-white rounded"
-                        placeholder="Title"
-                      />
-                      <input
-                        type="number"
-                        value={editForm.year}
-                        onChange={(e) => setEditForm({...editForm, year: e.target.value})}
-                        className="w-full px-3 py-2 bg-gray-900 text-white rounded"
-                        placeholder="Year"
-                      />
-                      <select
-                        value={editForm.genre}
-                        onChange={(e) => setEditForm({...editForm, genre: e.target.value})}
-                        className="w-full px-3 py-2 bg-gray-900 text-white rounded"
-                      >
-                        <option value="hollywood">Hollywood</option>
-                        <option value="bollywood">Bollywood</option>
-                        <option value="both">Both</option>
-                      </select>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => saveEdit(frame.movies.id)}
-                          className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded transition"
+          <div className="mb-6 flex flex-wrap gap-3 sm:mb-8">
+            <button
+              onClick={() => setFilter('all')}
+              className={`rounded-lg px-5 py-2.5 font-bold transition ${
+                filter === 'all'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilter('hollywood')}
+              className={`rounded-lg px-5 py-2.5 font-bold transition ${
+                filter === 'hollywood'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              }`}
+            >
+              🎬 Hollywood
+            </button>
+            <button
+              onClick={() => setFilter('bollywood')}
+              className={`rounded-lg px-5 py-2.5 font-bold transition ${
+                filter === 'bollywood'
+                  ? 'bg-orange-600 text-white'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              }`}
+            >
+              🎭 Bollywood
+            </button>
+          </div>
+
+          {loading ? (
+            <div className="py-12 text-center text-xl text-gray-900">
+              Loading frames...
+            </div>
+          ) : frames.length === 0 ? (
+            <div className="py-12 text-center">
+              <p className="mb-4 text-xl text-gray-700">No frames uploaded yet</p>
+              <Link
+                href="/admin/upload"
+                className="inline-block rounded-lg bg-blue-600 px-6 py-3 font-bold text-white transition hover:bg-blue-700"
+              >
+                Upload Your First Frame
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {frames.map((frame) => (
+                <div
+                  key={frame.id}
+                  className="overflow-hidden rounded-xl bg-gray-800 shadow-lg transition hover:shadow-2xl"
+                >
+                  <div className="relative aspect-video bg-gray-900">
+                    <img
+                      src={frame.image_url}
+                      alt={frame.movies?.title}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+
+                  <div className="p-4">
+                    {editingMovie === frame.movies?.id ? (
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          value={editForm.title}
+                          onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                          className="w-full rounded bg-gray-900 px-3 py-2 text-white"
+                          placeholder="Title"
+                        />
+                        <input
+                          type="number"
+                          value={editForm.year}
+                          onChange={(e) => setEditForm({ ...editForm, year: e.target.value })}
+                          className="w-full rounded bg-gray-900 px-3 py-2 text-white"
+                          placeholder="Year"
+                        />
+                        <select
+                          value={editForm.genre}
+                          onChange={(e) => setEditForm({ ...editForm, genre: e.target.value })}
+                          className="w-full rounded bg-gray-900 px-3 py-2 text-white"
                         >
-                          ✓ Save
-                        </button>
-                        <button
-                          onClick={cancelEdit}
-                          className="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-2 rounded transition"
-                        >
-                          ✗ Cancel
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    // Display Mode
-                    <>
-                      <h3 className="text-white font-bold text-lg mb-1">
-                        {frame.movies?.title}
-                      </h3>
-                      <p className="text-gray-400 text-sm mb-3">
-                        {frame.movies?.year} • TMDb: {frame.movies?.tmdb_id}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                          frame.movies?.genre === 'hollywood'
-                            ? 'bg-blue-500/20 text-blue-400'
-                            : frame.movies?.genre === 'bollywood'
-                            ? 'bg-orange-500/20 text-orange-400'
-                            : 'bg-purple-500/20 text-purple-400'
-                        }`}>
-                          {frame.movies?.genre}
-                        </span>
-                        <div className="flex gap-2">
+                          <option value="hollywood">Hollywood</option>
+                          <option value="bollywood">Bollywood</option>
+                          <option value="both">Both</option>
+                        </select>
+                        <div className="flex flex-col gap-2 sm:flex-row">
                           <button
-                            onClick={() => startEdit(frame.movies)}
-                            className="text-blue-400 hover:text-blue-300 text-sm font-bold transition"
+                            onClick={() => saveEdit(frame.movies.id)}
+                            className="flex-1 rounded bg-green-600 py-2 text-white transition hover:bg-green-700"
                           >
-                            ✏️ Edit
+                            ✓ Save
                           </button>
                           <button
-                            onClick={() => deleteFrame(frame.id, frame.image_url)}
-                            className="text-red-400 hover:text-red-300 text-sm font-bold transition"
+                            onClick={cancelEdit}
+                            className="flex-1 rounded bg-gray-600 py-2 text-white transition hover:bg-gray-700"
                           >
-                            🗑️ Delete
+                            ✕ Cancel
                           </button>
                         </div>
                       </div>
-                    </>
-                  )}
+                    ) : (
+                      <>
+                        <h3 className="mb-1 text-lg font-bold text-white">
+                          {frame.movies?.title}
+                        </h3>
+                        <p className="mb-3 text-sm text-gray-400">
+                          {frame.movies?.year} • TMDb: {frame.movies?.tmdb_id}
+                        </p>
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                          <span className={`w-fit rounded-full px-3 py-1 text-xs font-bold ${
+                            frame.movies?.genre === 'hollywood'
+                              ? 'bg-blue-500/20 text-blue-400'
+                              : frame.movies?.genre === 'bollywood'
+                              ? 'bg-orange-500/20 text-orange-400'
+                              : 'bg-purple-500/20 text-purple-400'
+                          }`}>
+                            {frame.movies?.genre}
+                          </span>
+                          <div className="flex flex-wrap gap-3">
+                            <button
+                              onClick={() => startEdit(frame.movies)}
+                              className="text-sm font-bold text-blue-400 transition hover:text-blue-300"
+                            >
+                              ✏️ Edit
+                            </button>
+                            <button
+                              onClick={() => deleteFrame(frame.id, frame.image_url)}
+                              className="text-sm font-bold text-red-400 transition hover:text-red-300"
+                            >
+                              🗑️ Delete
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </AdminAuthGuard>
   )
 }
-
-

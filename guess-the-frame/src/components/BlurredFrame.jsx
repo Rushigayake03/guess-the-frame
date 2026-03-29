@@ -4,11 +4,8 @@ import { useEffect, useState } from 'react'
 import { Film, Loader2 } from 'lucide-react'
 
 export default function BlurredFrame({ imageUrl, isRevealed, movieTitle }) {
-  const [imageLoaded, setImageLoaded] = useState(false)
-
-  useEffect(() => {
-    setImageLoaded(false)
-  }, [imageUrl])
+  const [loadedImageUrl, setLoadedImageUrl] = useState(null)
+  const imageLoaded = !imageUrl || loadedImageUrl === imageUrl
 
   return (
     <div className="relative w-full">
@@ -29,10 +26,11 @@ export default function BlurredFrame({ imageUrl, isRevealed, movieTitle }) {
         }`}>
           {imageUrl ? (
             <img
+              key={imageUrl}
               src={imageUrl}
               alt={isRevealed ? movieTitle : "Blurred movie frame"}
               className="w-full h-full object-cover"
-              onLoad={() => setImageLoaded(true)}
+              onLoad={() => setLoadedImageUrl(imageUrl)}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black">
@@ -60,7 +58,7 @@ export default function BlurredFrame({ imageUrl, isRevealed, movieTitle }) {
             <div className="mx-4 rounded-2xl border-2 border-yellow-500/50 bg-black/50 px-4 py-4 text-center backdrop-blur-md sm:px-8 sm:py-6">
               <Film className="mx-auto mb-3 h-12 w-12 animate-bounce text-yellow-400 sm:mb-4 sm:h-16 sm:w-16" />
               <p className="mb-2 text-2xl font-black uppercase tracking-wide text-yellow-400 sm:text-3xl sm:tracking-wider">Frame Hidden</p>
-              <p className="text-sm font-medium text-gray-300 sm:text-lg">Click "REVEAL" to see the scene</p>
+              <p className="text-sm font-medium text-gray-300 sm:text-lg">Click &quot;REVEAL&quot; to see the scene</p>
             </div>
           </div>
         )}

@@ -20,7 +20,6 @@ export default function AdminUploadPage() {
   const [fetchingMovie, setFetchingMovie] = useState(false)
   const [packs, setPacks] = useState([])
 
-  // Fetch available packs
   useEffect(() => {
     fetchPacks()
   }, [])
@@ -37,7 +36,6 @@ export default function AdminUploadPage() {
     }
   }
 
-  // Fetch movie details from TMDb via our API route
   const fetchMovieFromTMDb = async () => {
     if (!tmdbId) {
       setMessage({ type: 'error', text: 'Please enter a TMDb ID' })
@@ -60,35 +58,33 @@ export default function AdminUploadPage() {
 
       const data = await response.json()
       console.log('Movie data:', data)
-      
+
       setMovieTitle(data.title)
       setMovieYear(data.year.toString())
-      setMessage({ 
-        type: 'success', 
-        text: `✅ Found: ${data.title} (${data.year})` 
+      setMessage({
+        type: 'success',
+        text: `✅ Found: ${data.title} (${data.year})`
       })
     } catch (error) {
       console.error('Fetch error:', error)
-      setMessage({ 
-        type: 'error', 
-        text: `❌ Failed to fetch movie: ${error.message}` 
+      setMessage({
+        type: 'error',
+        text: `❌ Failed to fetch movie: ${error.message}`
       })
     } finally {
       setFetchingMovie(false)
     }
   }
 
-  // Handle file selection
   const handleFileChange = (e) => {
     const file = e.target.files?.[0]
-    
+
     if (!file) {
       setImageFile(null)
       setImagePreview(null)
       return
     }
 
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       setMessage({ type: 'error', text: 'Please select an image file' })
       setImageFile(null)
@@ -96,7 +92,6 @@ export default function AdminUploadPage() {
       return
     }
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       setMessage({ type: 'error', text: 'Image must be less than 5MB' })
       setImageFile(null)
@@ -104,27 +99,22 @@ export default function AdminUploadPage() {
       return
     }
 
-    // File is valid
     setImageFile(file)
-    
-    // Create preview
+
     const reader = new FileReader()
     reader.onloadend = () => {
       setImagePreview(reader.result)
     }
     reader.readAsDataURL(file)
-    
-    // Clear any previous error messages
+
     if (message.type === 'error') {
       setMessage({ type: '', text: '' })
     }
   }
 
-  // Upload frame to Supabase
   const handleUpload = async (e) => {
     e.preventDefault()
 
-    // Detailed validation with specific error messages
     if (!tmdbId || !tmdbId.trim()) {
       setMessage({ type: 'error', text: '❌ Please enter a TMDb ID' })
       return
@@ -149,7 +139,6 @@ export default function AdminUploadPage() {
     setMessage({ type: 'info', text: '⏳ Uploading...' })
 
     try {
-      // Step 1: Check if movie exists in database
       const { data: existingMovie } = await supabase
         .from('movies')
         .select('id')
@@ -162,7 +151,6 @@ export default function AdminUploadPage() {
         movieId = existingMovie.id
         console.log('Movie already exists:', movieId)
       } else {
-        // Step 2: Create movie entry
         const { data: newMovie, error: movieError } = await supabase
           .from('movies')
           .insert({
@@ -184,7 +172,6 @@ export default function AdminUploadPage() {
         console.log('Created new movie:', movieId)
       }
 
-      // Step 3: Upload image to Supabase Storage
       const fileExt = imageFile.name.split('.').pop()
       const fileName = `${tmdbId}_${Date.now()}.${fileExt}`
 
@@ -202,14 +189,14 @@ export default function AdminUploadPage() {
         throw new Error(`Upload failed: ${uploadError.message}`)
       }
 
-      // Step 4: Get public URL
-      const { data: { publicUrl } } = supabase.storage
+      const {
+        data: { publicUrl }
+      } = supabase.storage
         .from('movie-frames')
         .getPublicUrl(fileName)
 
       console.log('Public URL:', publicUrl)
 
-      // Step 5: Create frame entry
       const { error: frameError } = await supabase
         .from('frames')
         .insert({
@@ -223,13 +210,11 @@ export default function AdminUploadPage() {
         throw new Error(`Frame save failed: ${frameError.message}`)
       }
 
-      // Success!
-      setMessage({ 
-        type: 'success', 
-        text: `✅ Successfully uploaded frame for "${movieTitle}"!` 
+      setMessage({
+        type: 'success',
+        text: `✅ Successfully uploaded frame for "${movieTitle}"!`
       })
 
-      // Reset form
       setTimeout(() => {
         setTmdbId('')
         setMovieTitle('')
@@ -238,17 +223,15 @@ export default function AdminUploadPage() {
         setPackId('')
         setImageFile(null)
         setImagePreview(null)
-        
-        // Reset file input
+
         const fileInput = document.querySelector('input[type="file"]')
         if (fileInput) fileInput.value = ''
       }, 2000)
-
     } catch (error) {
       console.error('Upload error:', error)
-      setMessage({ 
-        type: 'error', 
-        text: `❌ ${error.message}` 
+      setMessage({
+        type: 'error',
+        text: `❌ ${error.message}`
       })
     } finally {
       setLoading(false)
@@ -257,230 +240,214 @@ export default function AdminUploadPage() {
 
   return (
     <AdminAuthGuard>
-      <div className="min-h-screen bg-[#FDFBD4] p-8">
-        <AdminHeader />
-            <div className="min-h-screen bg-[#FDFBD4] p-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            🎬 Upload Movie Frame
-          </h1>
-          <p className="text-gray-300 text-lg">
-            Add new movie frames to the database
-          </p>
-        </div>
+      <div className="min-h-screen bg-[#FDFBD4] px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
+        <div className="mx-auto max-w-4xl">
+          <AdminHeader />
 
-        {/* Navigation */}
-        <div className="flex gap-3 mb-8">
-          <Link
-            href="/admin"
-            className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition"
-          >
-            ← Admin Dashboard
-          </Link>
-          <Link
-            href="/admin/frames"
-            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition"
-          >
-            View Frames
-          </Link>
-          <Link
-            href="/admin/packs"
-            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition"
-          >
-            Manage Packs
-          </Link>
-        </div>
+          <div className="mb-8 text-center sm:mb-10 lg:mb-12">
+            <h1 className="mb-3 text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">
+              🎬 Upload Movie Frame
+            </h1>
+            <p className="text-base text-gray-700 sm:text-lg">
+              Add new movie frames to the database
+            </p>
+          </div>
 
-        {/* Upload Form */}
-        <form onSubmit={handleUpload} className="bg-gray-800 rounded-2xl p-8 shadow-2xl">
-          {/* TMDb ID + Fetch Button */}
-          <div className="mb-6">
-            <label className="block text-white font-bold mb-2">
-              TMDb Movie ID *
-            </label>
-            <div className="flex gap-3">
+          <div className="mb-6 flex flex-wrap gap-3 sm:mb-8">
+            <Link
+              href="/admin"
+              className="rounded-lg bg-gray-700 px-4 py-2.5 font-bold text-white transition hover:bg-gray-600"
+            >
+              ← Admin Dashboard
+            </Link>
+            <Link
+              href="/admin/frames"
+              className="rounded-lg bg-purple-600 px-4 py-2.5 font-bold text-white transition hover:bg-purple-700"
+            >
+              View Frames
+            </Link>
+            <Link
+              href="/admin/packs"
+              className="rounded-lg bg-green-600 px-4 py-2.5 font-bold text-white transition hover:bg-green-700"
+            >
+              Manage Packs
+            </Link>
+          </div>
+
+          <form onSubmit={handleUpload} className="rounded-2xl bg-gray-800 p-5 shadow-2xl sm:p-6 lg:p-8">
+            <div className="mb-6">
+              <label className="mb-2 block font-bold text-white">
+                TMDb Movie ID *
+              </label>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <input
+                  type="text"
+                  value={tmdbId}
+                  onChange={(e) => setTmdbId(e.target.value)}
+                  placeholder="e.g., 155 (for The Dark Knight)"
+                  className="w-full flex-1 rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
+                <button
+                  type="button"
+                  onClick={fetchMovieFromTMDb}
+                  disabled={fetchingMovie || !tmdbId}
+                  className="w-full rounded-lg bg-blue-600 px-6 py-3 font-bold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-700 sm:w-auto"
+                >
+                  {fetchingMovie ? '🔄 Fetching...' : '🔍 Fetch Info'}
+                </button>
+              </div>
+              <p className="mt-2 text-sm text-gray-400">
+                Find the TMDb ID from the URL: themoviedb.org/movie/<strong>155</strong>
+              </p>
+            </div>
+
+            <div className="mb-6">
+              <label className="mb-2 block font-bold text-white">
+                Movie Title *
+              </label>
               <input
                 type="text"
-                value={tmdbId}
-                onChange={(e) => setTmdbId(e.target.value)}
-                placeholder="e.g., 155 (for The Dark Knight)"
-                className="flex-1 px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none"
+                value={movieTitle}
+                onChange={(e) => setMovieTitle(e.target.value)}
+                placeholder="e.g., The Dark Knight"
+                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
               />
-              <button
-                type="button"
-                onClick={fetchMovieFromTMDb}
-                disabled={fetchingMovie || !tmdbId}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 disabled:cursor-not-allowed text-white font-bold rounded-lg transition"
-              >
-                {fetchingMovie ? '🔄 Fetching...' : '🔍 Fetch Info'}
-              </button>
             </div>
-            <p className="text-gray-400 text-sm mt-2">
-              Find the TMDb ID from the URL: themoviedb.org/movie/<strong>155</strong>
-            </p>
-          </div>
 
-          {/* Movie Title */}
-          <div className="mb-6">
-            <label className="block text-white font-bold mb-2">
-              Movie Title *
-            </label>
-            <input
-              type="text"
-              value={movieTitle}
-              onChange={(e) => setMovieTitle(e.target.value)}
-              placeholder="e.g., The Dark Knight"
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none"
-            />
-          </div>
-
-          {/* Movie Year */}
-          <div className="mb-6">
-            <label className="block text-white font-bold mb-2">
-              Release Year *
-            </label>
-            <input
-              type="text"
-              value={movieYear}
-              onChange={(e) => setMovieYear(e.target.value)}
-              placeholder="e.g., 2008"
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none"
-            />
-          </div>
-
-          {/* Genre */}
-          <div className="mb-6">
-            <label className="block text-white font-bold mb-2">
-              Genre *
-            </label>
-            <select
-              value={genre}
-              onChange={(e) => setGenre(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none"
-            >
-              <option value="hollywood">🎬 Hollywood</option>
-              <option value="bollywood">🎭 Bollywood</option>
-              <option value="both">🌍 Both</option>
-            </select>
-          </div>
-
-          {/* Pack Assignment (Optional) */}
-          <div className="mb-6">
-            <label className="block text-white font-bold mb-2">
-              Assign to Pack (Optional)
-            </label>
-            <select
-              value={packId}
-              onChange={(e) => setPackId(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none"
-            >
-              <option value="">None - Just add to general pool</option>
-              {packs.map(pack => (
-                <option key={pack.id} value={pack.id}>
-                  {pack.name} ({pack.frame_count || 0} frames)
-                </option>
-              ))}
-            </select>
-            <p className="text-gray-400 text-sm mt-2">
-              Organize frames into themed collections
-            </p>
-          </div>
-
-          {/* Image Upload */}
-          <div className="mb-6">
-            <label className="block text-white font-bold mb-2">
-              Movie Frame Image *
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer cursor-pointer"
-            />
-            <p className="text-gray-400 text-sm mt-2">
-              Max size: 5MB • Formats: JPG, PNG, WEBP • Selected: {imageFile?.name || 'None'}
-            </p>
-          </div>
-
-          {/* Image Preview */}
-          {imagePreview && (
             <div className="mb-6">
-              <label className="block text-white font-bold mb-2">
-                Preview
+              <label className="mb-2 block font-bold text-white">
+                Release Year *
               </label>
-              <div className="relative aspect-video bg-gray-900 rounded-lg overflow-hidden border-2 border-green-500">
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-2 right-2 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                  ✓ Image Ready
+              <input
+                type="text"
+                value={movieYear}
+                onChange={(e) => setMovieYear(e.target.value)}
+                placeholder="e.g., 2008"
+                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              />
+            </div>
+
+            <div className="mb-6">
+              <label className="mb-2 block font-bold text-white">
+                Genre *
+              </label>
+              <select
+                value={genre}
+                onChange={(e) => setGenre(e.target.value)}
+                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="hollywood">🎬 Hollywood</option>
+                <option value="bollywood">🎭 Bollywood</option>
+                <option value="both">🌍 Both</option>
+              </select>
+            </div>
+
+            <div className="mb-6">
+              <label className="mb-2 block font-bold text-white">
+                Assign to Pack (Optional)
+              </label>
+              <select
+                value={packId}
+                onChange={(e) => setPackId(e.target.value)}
+                className="w-full rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="">None - Just add to general pool</option>
+                {packs.map((pack) => (
+                  <option key={pack.id} value={pack.id}>
+                    {pack.name} ({pack.frame_count || 0} frames)
+                  </option>
+                ))}
+              </select>
+              <p className="mt-2 text-sm text-gray-400">
+                Organize frames into themed collections
+              </p>
+            </div>
+
+            <div className="mb-6">
+              <label className="mb-2 block font-bold text-white">
+                Movie Frame Image *
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full cursor-pointer rounded-lg border border-gray-700 bg-gray-900 px-4 py-3 text-white file:mr-4 file:cursor-pointer file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-white hover:file:bg-blue-700"
+              />
+              <p className="mt-2 break-words text-sm text-gray-400">
+                Max size: 5MB • Formats: JPG, PNG, WEBP • Selected: {imageFile?.name || 'None'}
+              </p>
+            </div>
+
+            {imagePreview && (
+              <div className="mb-6">
+                <label className="mb-2 block font-bold text-white">
+                  Preview
+                </label>
+                <div className="relative aspect-video overflow-hidden rounded-lg border-2 border-green-500 bg-gray-900">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute right-2 top-2 rounded-full bg-green-500 px-3 py-1 text-sm font-bold text-white">
+                    ✓ Image Ready
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {message.text && (
+              <div className={`mb-6 rounded-lg p-4 font-medium ${
+                message.type === 'success'
+                  ? 'border border-green-500 bg-green-500/20 text-green-400'
+                  : message.type === 'info'
+                  ? 'border border-blue-500 bg-blue-500/20 text-blue-400'
+                  : 'border border-red-500 bg-red-500/20 text-red-400'
+              }`}>
+                {message.text}
+              </div>
+            )}
+
+            <div className="mb-6 rounded-lg border border-gray-700 bg-gray-900 p-4">
+              <p className="mb-2 font-bold text-white">Form Status:</p>
+              <div className="space-y-1 text-sm">
+                <div className={tmdbId ? 'text-green-400' : 'text-gray-500'}>
+                  {tmdbId ? '✓' : '○'} TMDb ID: {tmdbId || 'Not entered'}
+                </div>
+                <div className={movieTitle ? 'text-green-400' : 'text-gray-500'}>
+                  {movieTitle ? '✓' : '○'} Title: {movieTitle || 'Not entered'}
+                </div>
+                <div className={movieYear ? 'text-green-400' : 'text-gray-500'}>
+                  {movieYear ? '✓' : '○'} Year: {movieYear || 'Not entered'}
+                </div>
+                <div className={imageFile ? 'text-green-400' : 'text-gray-500'}>
+                  {imageFile ? '✓' : '○'} Image: {imageFile ? imageFile.name : 'Not selected'}
                 </div>
               </div>
             </div>
-          )}
 
-          {/* Message */}
-          {message.text && (
-            <div className={`mb-6 p-4 rounded-lg font-medium ${
-              message.type === 'success' 
-                ? 'bg-green-500/20 border border-green-500 text-green-400' 
-                : message.type === 'info'
-                ? 'bg-blue-500/20 border border-blue-500 text-blue-400'
-                : 'bg-red-500/20 border border-red-500 text-red-400'
-            }`}>
-              {message.text}
-            </div>
-          )}
+            <button
+              type="submit"
+              disabled={loading || !tmdbId || !movieTitle || !movieYear || !imageFile}
+              className="w-full rounded-xl bg-gradient-to-r from-green-600 to-green-700 px-6 py-3.5 text-base font-bold text-white transition-all transform hover:scale-[1.02] hover:from-green-500 hover:to-green-600 active:scale-[0.98] disabled:cursor-not-allowed disabled:from-gray-700 disabled:to-gray-700 sm:px-8 sm:py-4 sm:text-lg"
+            >
+              {loading ? '⏳ Uploading...' : imageFile ? '✅ Upload Frame' : '⚠️ Select an Image First'}
+            </button>
+          </form>
 
-          {/* Validation Status */}
-          <div className="mb-6 p-4 bg-gray-900 rounded-lg border border-gray-700">
-            <p className="text-white font-bold mb-2">Form Status:</p>
-            <div className="space-y-1 text-sm">
-              <div className={tmdbId ? 'text-green-400' : 'text-gray-500'}>
-                {tmdbId ? '✓' : '○'} TMDb ID: {tmdbId || 'Not entered'}
-              </div>
-              <div className={movieTitle ? 'text-green-400' : 'text-gray-500'}>
-                {movieTitle ? '✓' : '○'} Title: {movieTitle || 'Not entered'}
-              </div>
-              <div className={movieYear ? 'text-green-400' : 'text-gray-500'}>
-                {movieYear ? '✓' : '○'} Year: {movieYear || 'Not entered'}
-              </div>
-              <div className={imageFile ? 'text-green-400' : 'text-gray-500'}>
-                {imageFile ? '✓' : '○'} Image: {imageFile ? imageFile.name : 'Not selected'}
-              </div>
-            </div>
+          <div className="mt-6 rounded-xl border border-gray-700 bg-gray-800/50 p-5 backdrop-blur sm:mt-8 sm:p-6">
+            <h2 className="mb-4 text-lg font-bold text-white sm:text-xl">📋 How to Upload</h2>
+            <ol className="space-y-2 text-sm text-gray-300 sm:text-base">
+              <li>1. Enter TMDb ID and click &quot;Fetch Info&quot; (or enter manually)</li>
+              <li>2. Select genre (Hollywood/Bollywood/Both)</li>
+              <li>3. (Optional) Assign to a pack for themed collections</li>
+              <li>4. Click &quot;Choose File&quot; and select a movie screenshot</li>
+              <li>5. Verify the preview appears</li>
+              <li>6. Click &quot;Upload Frame&quot;</li>
+            </ol>
           </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={loading || !tmdbId || !movieTitle || !movieYear || !imageFile}
-            className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-500 hover:to-green-600 disabled:from-gray-700 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-bold py-4 px-8 rounded-xl text-lg transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-          >
-            {loading ? '⏳ Uploading...' : imageFile ? '✅ Upload Frame' : '⚠️ Select an Image First'}
-          </button>
-        </form>
-
-        {/* Instructions */}
-        <div className="mt-8 bg-gray-800/50 backdrop-blur rounded-xl p-6 border border-gray-700">
-          <h2 className="text-white font-bold text-xl mb-4">📋 How to Upload</h2>
-          <ol className="text-gray-300 space-y-2">
-            <li>1. Enter TMDb ID and click "Fetch Info" (or enter manually)</li>
-            <li>2. Select genre (Hollywood/Bollywood/Both)</li>
-            <li>3. (Optional) Assign to a pack for themed collections</li>
-            <li>4. Click "Choose File" and select a movie screenshot</li>
-            <li>5. Verify the preview appears</li>
-            <li>6. Click "Upload Frame"</li>
-          </ol>
         </div>
-      </div>
-    </div>
       </div>
     </AdminAuthGuard>
   )
 }
-

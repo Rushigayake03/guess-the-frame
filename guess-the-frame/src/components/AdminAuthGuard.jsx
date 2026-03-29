@@ -11,47 +11,43 @@ export default function AdminAuthGuard({ children }) {
   const [authorized, setAuthorized] = useState(false)
 
   useEffect(() => {
+    const checkAuth = async () => {
+      const user = await getUser()
+
+      if (!user) {
+        router.push('/admin/login')
+        return
+      }
+
+      const admin = await isAdmin()
+
+      if (!admin) {
+        alert('Access denied. Admin privileges required.')
+        router.push('/')
+        return
+      }
+
+      setAuthorized(true)
+      setLoading(false)
+    }
+
     checkAuth()
   }, [])
 
-  const checkAuth = async () => {
-    const user = await getUser()
-    
-    if (!user) {
-      // Not logged in - redirect to login
-      router.push('/admin/login')
-      return
-    }
-
-    const admin = await isAdmin()
-    
-    if (!admin) {
-      // Logged in but not admin - redirect to home
-      alert('Access denied. Admin privileges required.')
-      router.push('/')
-      return
-    }
-
-    // All checks passed
-    setAuthorized(true)
-    setLoading(false)
-  }
-
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center">
+      <div className="min-h-screen bg-[#FDFBD4] flex items-center justify-center px-4">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-900 text-xl font-semibold">Verifying access...</p>
+          <div className="mx-auto mb-4 h-14 w-14 animate-spin rounded-full border-t-4 border-b-4 border-blue-500 sm:h-16 sm:w-16"></div>
+          <p className="text-lg font-semibold text-gray-900 sm:text-xl">Verifying access...</p>
         </div>
       </div>
     )
   }
 
   if (!authorized) {
-    return null // Will redirect
+    return null
   }
 
   return <>{children}</>
 }
-

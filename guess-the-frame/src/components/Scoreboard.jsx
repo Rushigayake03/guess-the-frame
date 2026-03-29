@@ -86,7 +86,7 @@ export default function Scoreboard({
         {accuracy >= 80 ? (
           <p className="flex items-center justify-center gap-2 text-sm font-bold text-[#6d3b14]">
             <Flame className="w-4 h-4" />
-            You're on fire!
+            You&apos;re on fire!
           </p>
         ) : accuracy >= 60 ? (
           <p className="flex items-center justify-center gap-2 text-sm font-bold text-[#6d3b14]">

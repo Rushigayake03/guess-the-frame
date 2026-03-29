@@ -10,7 +10,6 @@ export default function AnswerInput({
   placeholder = "Type movie name..."
 }) {
   const [answer, setAnswer] = useState('')
-  const [isShaking, setIsShaking] = useState(false)
 
   // Play sound effect
   const playSound = (isCorrect) => {
@@ -29,10 +28,20 @@ export default function AnswerInput({
 
   // Trigger shake animation on wrong answer
   useEffect(() => {
+    const inputWrapper = document.getElementById('answer-input-wrapper')
+
     if (isCorrect === false) {
       playSound(false)
-      setIsShaking(true)
-      const timer = setTimeout(() => setIsShaking(false), 500)
+      if (!inputWrapper) return undefined
+
+      inputWrapper.classList.remove('animate-shake')
+      void inputWrapper.offsetWidth
+      inputWrapper.classList.add('animate-shake')
+
+      const timer = setTimeout(() => {
+        inputWrapper.classList.remove('animate-shake')
+      }, 500)
+
       return () => clearTimeout(timer)
     } else if (isCorrect === true) {
       playSound(true)
@@ -49,7 +58,7 @@ export default function AnswerInput({
 
   return (
     <form onSubmit={handleSubmit} className="w-full">
-      <div className={`relative ${isShaking ? 'animate-shake' : ''}`}>
+      <div id="answer-input-wrapper" className="relative">
         <input
           type="text"
           value={answer}
