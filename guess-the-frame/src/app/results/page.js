@@ -99,28 +99,28 @@ function ResultsContent() {
             onClick={() => router.push(`/game?mode=${mode}`)}
             className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-5 py-3.5 text-base font-bold text-white transition-all transform hover:scale-[1.02] hover:from-blue-500 hover:to-blue-600 sm:px-8 sm:py-4 sm:text-lg lg:text-xl"
           >
-            🔄 Play Again
+             Play Again
           </button>
 
           <button
             onClick={shareResults}
             className="w-full rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 px-5 py-3.5 text-base font-bold text-white transition-all transform hover:scale-[1.02] hover:from-purple-500 hover:to-purple-600 sm:px-8 sm:py-4 sm:text-lg lg:text-xl"
           >
-            📱 Share Results
+             Share Results
           </button>
 
           <Link
             href="/play"
             className="block w-full rounded-xl bg-gray-700 px-5 py-3.5 text-center text-base font-bold text-white transition-all hover:bg-gray-600 sm:px-8 sm:py-4 sm:text-lg lg:text-xl"
           >
-            🎮 Choose Different Mode
+             Choose Different Mode
           </Link>
 
           <Link
             href="/"
             className="block w-full rounded-xl bg-gray-800 px-5 py-3.5 text-center text-base font-bold text-white transition-all hover:bg-gray-700 sm:px-8 sm:py-4 sm:text-lg lg:text-xl"
           >
-            🏠 Back to Home
+             Back to Home
           </Link>
         </div>
       </div>
